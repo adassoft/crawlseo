@@ -161,6 +161,19 @@ function originOf(url: string): string {
   return `${u.protocol}//${u.host}`;
 }
 
+const BINARY_FILE_EXTENSIONS = /\.(?:exe|zip|rar|7z|tar|gz|tgz|bz2|msi|dmg|pkg|apk|ipa|iso|bin|doc|docx|xls|xlsx|ppt|pptx|pdf|mp3|mp4|avi|mov|mkv|wav|ogg)$/i;
+
+export function isBinaryOrDownloadUrl(url: string): boolean {
+  try {
+    const { pathname } = new URL(url);
+    if (BINARY_FILE_EXTENSIONS.test(pathname)) return true;
+    if (/(?:^|\/)(?:baixar|download-file)(?:\/|$)/i.test(pathname)) return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  SSRF protection                                                   */
 /* ------------------------------------------------------------------ */
@@ -485,6 +498,7 @@ export function parseHtml(
     const anchorText = decodeEntities(stripTags(anchorContent)).slice(0, 200) || null;
     const isNofollow = /\bnofollow\b/i.test(tagAttrs.get("rel") ?? "");
     const isInternal = sameHost(abs, seedUrl);
+    const isDownload = isBinaryOrDownloadUrl(abs);
 
     links.push({
       sourceUrl: url,
@@ -496,7 +510,9 @@ export function parseHtml(
     });
 
     if (isInternal) {
-      internalOutlinks.push(abs);
+      if (!isNofollow && !isDownload) {
+        internalOutlinks.push(abs);
+      }
     } else {
       externalOutlinks.push(abs);
     }
@@ -721,9 +737,30 @@ async function fetchPage(url: string, hooks: HopHooks): Promise<{
     hooks
   );
   try {
+    const contentType = r.res.headers.get("content-type") || "";
+    const disposition = r.res.headers.get("content-disposition") || "";
+    const isAttachment = /attachment/i.test(disposition);
+    const isNonHtmlBinary =
+      !contentType.includes("html") &&
+      !contentType.includes("xml") &&
+      !contentType.includes("text") &&
+      !contentType.includes("json");
+
+    if (isAttachment || (isNonHtmlBinary && r.res.ok)) {
+      await r.res.body?.cancel().catch(() => {});
+      return {
+        statusCode: r.res.status,
+        html: "",
+        finalUrl: r.finalUrl,
+        loadMs: r.activeMs(),
+        bytes: 0,
+        contentType,
+        xRobotsTag: r.xRobotsTag(),
+      };
+    }
+
     const buf = await readBodyCapped(r.res);
     const bytes = buf.byteLength;
-    const contentType = r.res.headers.get("content-type") || "";
     const html =
       contentType.includes("html") || contentType.includes("xml")
         ? new TextDecoder("utf-8", { fatal: false }).decode(buf)
@@ -1242,6 +1279,7 @@ async function executeCrawl(
       const normalized = normalizeUrl(next, origin);
       if (!normalized || visited.has(normalized)) continue;
       if (!sameHost(normalized, seedUrl)) continue;
+      if (isBinaryOrDownloadUrl(normalized)) continue;
 
       // Checked against the robots.txt of the URL's own origin: the bare
       // domain and www each have their own.
