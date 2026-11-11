@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { exportKeywordsCsv, exportPagesCsv } from "@/lib/seo-opportunities";
+import { exportCrawlIssuesCsv, exportCrawlPagesCsv } from "@/lib/crawler/export";
 
 export async function GET(
   req: Request,
@@ -21,13 +22,27 @@ export async function GET(
       return Response.json({ error: "Not found" }, { status: 404 });
     }
 
-    const type = new URL(req.url).searchParams.get("type") || "keywords";
-    const csv =
-      type === "pages"
-        ? await exportPagesCsv(siteId)
-        : await exportKeywordsCsv(siteId);
+    const url = new URL(req.url);
+    const type = url.searchParams.get("type") || "keywords";
+    const crawlId = url.searchParams.get("crawlId") || undefined;
 
-    const filename = `${site.domain}-${type}-28d.csv`;
+    let csv = "";
+    let filename = "";
+
+    if (type === "crawl-issues") {
+      csv = await exportCrawlIssuesCsv(siteId, crawlId);
+      filename = `${site.domain}-problemas-auditoria.csv`;
+    } else if (type === "crawl-pages") {
+      csv = await exportCrawlPagesCsv(siteId, crawlId);
+      filename = `${site.domain}-paginas-auditadas.csv`;
+    } else if (type === "pages") {
+      csv = await exportPagesCsv(siteId);
+      filename = `${site.domain}-pages-28d.csv`;
+    } else {
+      csv = await exportKeywordsCsv(siteId);
+      filename = `${site.domain}-keywords-28d.csv`;
+    }
+
     return new Response(csv, {
       headers: {
         "Content-Type": "text/csv; charset=utf-8",

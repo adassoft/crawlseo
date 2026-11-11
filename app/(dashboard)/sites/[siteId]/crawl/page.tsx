@@ -18,6 +18,7 @@ import { getVisibleIssues } from "@/lib/crawler/issue-filter";
 import { getCrawlActivity } from "@/lib/jobs/site-jobs";
 import { crawledPageColumns, getCrawlPageStats, getCrawlRobotsReport } from "@/lib/crawler/page-stats";
 import { REMEDIATION } from "@/lib/crawler/remediation";
+import { CsvExportButton } from "@/components/ui/csv-export-button";
 
 const ISSUE_ROWS = 200;
 
@@ -59,6 +60,33 @@ export default async function CrawlPage({ params, searchParams }: Props) {
     ? await getVisibleIssues(db, latest.id, ISSUE_ROWS)
     : { issues: [], total: 0, bySeverity: { CRITICAL: 0, WARNING: 0, INFO: 0 } };
 
+  // Fetch referring URLs (sources) for the issues to show where links were discovered
+  const issueUrls = Array.from(new Set(issues.map((i) => i.url)));
+  const sourceLinks =
+    latest && issueUrls.length > 0
+      ? await db.auditLink.findMany({
+          where: {
+            crawlId: latest.id,
+            targetUrl: { in: issueUrls },
+          },
+          select: {
+            sourceUrl: true,
+            targetUrl: true,
+            anchorText: true,
+          },
+          take: 2000,
+        })
+      : [];
+
+  const sourcesByTarget = new Map<string, Array<{ sourceUrl: string; anchorText: string | null }>>();
+  for (const link of sourceLinks) {
+    const list = sourcesByTarget.get(link.targetUrl) ?? [];
+    if (!list.some((item) => item.sourceUrl === link.sourceUrl)) {
+      list.push({ sourceUrl: link.sourceUrl, anchorText: link.anchorText });
+      sourcesByTarget.set(link.targetUrl, list);
+    }
+  }
+
   // Page counts come from the database over every stored page, and the table
   // gets every row (a crawl stores at most 2000), so no count depends on a
   // capped list (#56).
@@ -87,7 +115,19 @@ export default async function CrawlPage({ params, searchParams }: Props) {
             ? `Auditoria de ${crawledAt} · ${pageStats.pages} páginas rastreadas`
             : "Nenhuma auditoria realizada ainda"
         }
-        actions={<CrawlButton siteId={siteId} pageCeiling={crawlPageCeiling()} />}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            {latest && issues.length > 0 && (
+              <CsvExportButton
+                siteId={siteId}
+                type="crawl-issues"
+                crawlId={latest.id}
+                label="Exportar problemas (CSV)"
+              />
+            )}
+            <CrawlButton siteId={siteId} pageCeiling={crawlPageCeiling()} />
+          </div>
+        }
       />
 
       {/* Queued or running crawl indicator */}
@@ -152,8 +192,9 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                     </thead>
                     <tbody className="divide-y divide-border-soft">
                       {issues.map((issue) => {
-                        const details = issue.details as { howToFix?: string; kind?: string } | null;
+                        const details = issue.details as { howToFix?: string; kind?: string; urls?: string[] } | null;
                         const howToFix = getHowToFix(issue.type, details?.howToFix);
+                        const sources = sourcesByTarget.get(issue.url) ?? [];
                         return (
                           <tr key={issue.id} className="align-top">
                             <td className="px-4 py-3">
@@ -183,6 +224,56 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                                 </div>
                                 <CopyUrlButton url={issue.url} showLink />
                               </div>
+
+                              {/* Origem do link / Página onde foi encontrado */}
+                              {sources.length > 0 && (
+                                <div className="mt-2 flex flex-col gap-1 font-sans text-[11px] text-muted-foreground">
+                                  <div className="flex flex-wrap items-center gap-1.5">
+                                    <span className="font-semibold text-text">Origem:</span>
+                                    {sources.slice(0, 2).map((s) => (
+                                      <a
+                                        key={s.sourceUrl}
+                                        href={s.sourceUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-data inline-flex items-center rounded border border-border/60 bg-bg-soft px-1.5 py-0.5 text-text-strong transition-colors hover:border-link hover:text-link hover:underline [overflow-wrap:anywhere]"
+                                        title={`Encontrado em: ${s.sourceUrl}${s.anchorText ? ` · Texto: "${s.anchorText}"` : ""}`}
+                                      >
+                                        {pathOf(s.sourceUrl)}
+                                      </a>
+                                    ))}
+                                    {sources.length > 2 && (
+                                      <span
+                                        className="cursor-help text-[10px] text-muted-foreground underline decoration-dotted"
+                                        title={sources.slice(2).map((s) => s.sourceUrl).join("\n")}
+                                      >
+                                        +{sources.length - 2} outras
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* URLs Duplicadas (Ex: Títulos ou Descrições iguais) */}
+                              {details?.urls && details.urls.length > 1 && (
+                                <div className="mt-2 flex flex-wrap items-center gap-1.5 font-sans text-[11px] text-muted-foreground">
+                                  <span className="font-semibold text-warning">Duplicado com:</span>
+                                  {details.urls
+                                    .filter((u) => u !== issue.url)
+                                    .map((otherUrl) => (
+                                      <a
+                                        key={otherUrl}
+                                        href={otherUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-data inline-flex items-center rounded border border-warning/30 bg-warning-bg/40 px-1.5 py-0.5 text-text transition-colors hover:border-warning hover:text-warning hover:underline [overflow-wrap:anywhere]"
+                                        title={otherUrl}
+                                      >
+                                        {pathOf(otherUrl)}
+                                      </a>
+                                    ))}
+                                </div>
+                              )}
                             </td>
                             <td className="px-4 py-3 mono-label text-[11px] whitespace-nowrap text-muted-foreground">
                               {translateIssueType(issue.type)}
@@ -233,11 +324,21 @@ export default async function CrawlPage({ params, searchParams }: Props) {
           {/* Crawled pages table (from AuditPage model) */}
           {pageStats.pages > 0 && (
             <section id="crawled-pages" className="scroll-mt-6">
-              <div className="flex flex-col gap-1 px-1 pb-3">
-                <h2 className="text-[15px] leading-5 font-semibold">Páginas auditadas</h2>
-                <p className="text-[13px] text-muted-foreground">
-                  {pageStats.pages} páginas com metadados e notas detalhadas
-                </p>
+              <div className="flex flex-wrap items-center justify-between gap-3 px-1 pb-3">
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-[15px] leading-5 font-semibold">Páginas auditadas</h2>
+                  <p className="text-[13px] text-muted-foreground">
+                    {pageStats.pages} páginas com metadados e notas detalhadas
+                  </p>
+                </div>
+                {latest && (
+                  <CsvExportButton
+                    siteId={siteId}
+                    type="crawl-pages"
+                    crawlId={latest.id}
+                    label="Exportar páginas (CSV)"
+                  />
+                )}
               </div>
               {/* Keyed: the warning's link is a soft navigation to this page, which must reset the filter. */}
               <CrawledPagesTable key={initialFilter} rows={auditPages} initialFilter={initialFilter} />
