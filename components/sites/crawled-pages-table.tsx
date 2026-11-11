@@ -1,6 +1,7 @@
 "use client";
 
 import { useDeferredValue, useMemo, useState } from "react";
+import { CopyUrlButton } from "@/components/sites/copy-url-button";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -182,16 +183,28 @@ export function CrawledPagesTable({
         >
           {shown.map((p) => (
             <tr key={p.id} className="hover:bg-bg-soft">
-              <td className="max-w-md truncate px-4 py-[11px] font-data text-[12px] text-text-strong" title={p.url}>
-                {isNoindexRow(p) && (
-                  <span
-                    className="mono-label mr-2 inline-flex rounded-md border border-border px-1.5 py-px text-[10px] text-muted-foreground"
-                    title={`noindex via ${p.noindexSource ?? "meta"}: not scored`}
-                  >
-                    noindex
-                  </span>
-                )}
-                {p.url}
+              <td className="px-4 py-[11px] font-data text-[12px] text-text-strong">
+                <div className="flex items-center gap-2">
+                  <div className="min-w-0 max-w-sm truncate" title={p.url}>
+                    {isNoindexRow(p) && (
+                      <span
+                        className="mono-label mr-2 inline-flex rounded-md border border-border px-1.5 py-px text-[10px] text-muted-foreground"
+                        title={`noindex via ${p.noindexSource ?? "meta"}: not scored`}
+                      >
+                        noindex
+                      </span>
+                    )}
+                    <a
+                      href={p.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-link hover:underline"
+                    >
+                      {p.url}
+                    </a>
+                  </div>
+                  <CopyUrlButton url={p.url} />
+                </div>
               </td>
               <td className="px-4 py-[11px] text-right font-data">
                 <span

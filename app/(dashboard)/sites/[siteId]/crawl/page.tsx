@@ -8,6 +8,7 @@ import { CrawlButton } from "@/components/sites/action-buttons";
 import { CrawlStatusPoller } from "@/components/sites/crawl-status-poller";
 import { CrawlFailedNotice } from "@/components/sites/crawl-failed-notice";
 import { CrawledPagesTable, type IndexFilter } from "@/components/sites/crawled-pages-table";
+import { CopyUrlButton } from "@/components/sites/copy-url-button";
 import { NoindexWarningNotice } from "@/components/sites/noindex-warning";
 import { getNoindexWarning } from "@/lib/crawler/noindex-warning";
 import { RobotsPanel } from "@/components/sites/robots-panel";
@@ -165,8 +166,21 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                                 </p>
                               )}
                             </td>
-                            <td className="max-w-[260px] truncate px-4 py-3 font-data text-[12px]" title={issue.url}>
-                              {pathOf(issue.url)}
+                            <td className="px-4 py-3 font-data text-[12px]">
+                              <div className="flex items-start gap-2">
+                                <div className="min-w-0 max-w-xs md:max-w-sm xl:max-w-md">
+                                  <a
+                                    href={issue.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="break-all font-medium text-text-strong transition-colors hover:text-link hover:underline"
+                                    title={issue.url}
+                                  >
+                                    {pathOf(issue.url)}
+                                  </a>
+                                </div>
+                                <CopyUrlButton url={issue.url} showLink />
+                              </div>
                             </td>
                             <td className="px-4 py-3 mono-label text-[11px] whitespace-nowrap text-muted-foreground">
                               {issue.type.replace(/_/g, " ")}
@@ -249,6 +263,13 @@ function pathOf(url: string) {
 }
 
 function SeverityChip({ severity }: { severity: string }) {
+  const labels: Record<string, string> = {
+    CRITICAL: "Crítico",
+    WARNING: "Aviso",
+    INFO: "Informativo",
+  };
+  const label = labels[severity] ?? severity.toLowerCase();
+
   return (
     <span
       className={cn(
@@ -258,7 +279,7 @@ function SeverityChip({ severity }: { severity: string }) {
         severity === "INFO" && "border-border text-text"
       )}
     >
-      {severity.toLowerCase()}
+      {label}
     </span>
   );
 }
