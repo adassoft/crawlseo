@@ -15,12 +15,12 @@ import {
 const HEADERS: MetricHeader[] = [
   { label: "URL", sortKey: "url", defaultDir: "asc" },
   { label: "Status", align: "right", sortKey: "statusCode" },
-  { label: "Score", align: "right", sortKey: "contentScore" },
-  { label: "Words", align: "right", sortKey: "wordCount" },
-  { label: "H1s", align: "right", sortKey: "h1Count" },
-  { label: "Images", align: "right", sortKey: "imagesMissingAlt" },
-  { label: "Int. links", align: "right", sortKey: "internalLinks" },
-  { label: "Time", align: "right", sortKey: "responseTimeMs" },
+  { label: "Pontuação", align: "right", sortKey: "contentScore" },
+  { label: "Palavras", align: "right", sortKey: "wordCount" },
+  { label: "H1", align: "right", sortKey: "h1Count" },
+  { label: "Imagens", align: "right", sortKey: "imagesMissingAlt" },
+  { label: "Links int.", align: "right", sortKey: "internalLinks" },
+  { label: "Tempo", align: "right", sortKey: "responseTimeMs" },
 ];
 
 export interface CrawledPageRowData {
@@ -51,8 +51,8 @@ export function isNoindexRow(r: Pick<CrawledPageRowData, "indexable" | "statusCo
 }
 
 const INDEX_FILTERS: { value: IndexFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "indexable", label: "Scored" },
+  { value: "all", label: "Todas" },
+  { value: "indexable", label: "Pontuadas" },
   { value: "noindex", label: "noindex" },
 ];
 
@@ -69,13 +69,13 @@ export function paginate<T>(filtered: T[], total: number, pageIndex: number) {
   const current = Math.min(Math.max(0, pageIndex), pageCount - 1);
   const shown = filtered.slice(current * PAGE_SIZE, (current + 1) * PAGE_SIZE);
   const first = current * PAGE_SIZE + 1;
-  const pages = (n: number) => (n === 1 ? "page" : "pages");
+  const pages = (n: number) => (n === 1 ? "página" : "páginas");
   const of =
     filtered.length === total
       ? `${total} ${pages(total)}`
-      : `${filtered.length} matching ${pages(filtered.length)} (${total} in total)`;
-  const range = pageCount > 1 ? `, ${first} to ${first + shown.length - 1}` : "";
-  return { shown, current, pageCount, summary: `Showing ${shown.length} of ${of}${range}` };
+      : `${filtered.length} ${pages(filtered.length)} encontradas (${total} no total)`;
+  const range = pageCount > 1 ? `, ${first} a ${first + shown.length - 1}` : "";
+  return { shown, current, pageCount, summary: `Exibindo ${shown.length} de ${of}${range}` };
 }
 
 export function CrawledPagesTable({
@@ -113,10 +113,10 @@ export function CrawledPagesTable({
             setSearch(value);
             setPageIndex(0);
           }}
-          placeholder="Filter by URL..."
+          placeholder="Filtrar por URL..."
         />
         {noindexCount > 0 && (
-          <div role="group" aria-label="Indexing" className="flex items-center gap-1">
+          <div role="group" aria-label="Indexação" className="flex items-center gap-1">
             {INDEX_FILTERS.map((f) => (
               <Button
                 key={f.value}
@@ -138,8 +138,8 @@ export function CrawledPagesTable({
 
       {filtered.length === 0 ? (
         <div className="panel px-4 py-10 text-center">
-          <p className="font-medium text-text-strong">No pages match</p>
-          <p className="mt-1 text-sm text-muted-foreground">Loosen the search or the filter.</p>
+          <p className="font-medium text-text-strong">Nenhuma página encontrada</p>
+          <p className="mt-1 text-sm text-muted-foreground">Ajuste a busca ou o filtro.</p>
         </div>
       ) : (
         <MetricTable
@@ -152,20 +152,20 @@ export function CrawledPagesTable({
           footer={
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span>
-                {summary} · sorted by {sortLabel(HEADERS, sort)}
+                {summary} · ordenadas por {sortLabel(HEADERS, sort)}
               </span>
               {pageCount > 1 && (
-                <nav aria-label="Crawled pages" className="flex items-center gap-2">
+                <nav aria-label="Páginas auditadas" className="flex items-center gap-2">
                   <Button
                     variant="outline"
                     size="xs"
                     disabled={current === 0}
                     onClick={() => setPageIndex(current - 1)}
                   >
-                    Previous
+                    Anterior
                   </Button>
                   <span className="font-data">
-                    Page {current + 1} of {pageCount}
+                    Página {current + 1} de {pageCount}
                   </span>
                   <Button
                     variant="outline"
@@ -173,7 +173,7 @@ export function CrawledPagesTable({
                     disabled={current === pageCount - 1}
                     onClick={() => setPageIndex(current + 1)}
                   >
-                    Next
+                    Próxima
                   </Button>
                 </nav>
               )}

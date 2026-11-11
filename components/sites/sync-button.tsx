@@ -26,27 +26,27 @@ type SyncResponse = {
 /** What a finished sync says. Zero keywords and zero pages is not a success: Search Console sent nothing. */
 export function syncOutcome(status: number, data: SyncResponse): SyncOutcome {
   if (status === 401 && data.code === "REAUTH_REQUIRED") {
-    return { tone: "reauth", text: "Your Google connection expired." };
+    return { tone: "reauth", text: "Sua conexão com o Google expirou." };
   }
   if (status < 200 || status >= 300) {
-    return { tone: "error", text: data.error || "Sync failed" };
+    return { tone: "error", text: data.error || "Falha na sincronização" };
   }
   const keywords = data.keywordsInserted ?? 0;
   const pages = data.pagesInserted ?? 0;
   if (keywords === 0 && pages === 0) {
     const range =
       data.startDate && data.endDate
-        ? ` for ${formatDay(data.startDate, { year: true })} to ${formatDay(data.endDate, { year: true })}`
+        ? ` para ${formatDay(data.startDate, { year: true })} a ${formatDay(data.endDate, { year: true })}`
         : "";
-    return { tone: "empty", text: `GSC returned no data${range}. Check the property in Site settings.` };
+    return { tone: "empty", text: `O Search Console não retornou dados${range}. Verifique a propriedade em Configurações do Site.` };
   }
-  return { tone: "success", text: `Synced ${keywords} keywords · ${pages} pages` };
+  return { tone: "success", text: `Sincronizadas ${keywords} palavras-chave · ${pages} páginas` };
 }
 
 /** The outcome of a finished sync job, in the same terms as the old synchronous response. */
 export function syncJobOutcome(job: JobView): SyncOutcome {
   // An attempt failed and nothing will start the next one by itself.
-  if (job.waiting) return { tone: "waiting", text: pendingNote(job) ?? "Sync failed, retry now." };
+  if (job.waiting) return { tone: "waiting", text: pendingNote(job) ?? "Falha na sincronização, tente novamente." };
   if (job.status === "SUCCEEDED") return syncOutcome(200, (job.result ?? {}) as SyncResponse);
   if (job.errorCode === "REAUTH_REQUIRED") return syncOutcome(401, { code: "REAUTH_REQUIRED" });
   return syncOutcome(500, { error: job.lastError ?? undefined });
@@ -134,7 +134,7 @@ export function SyncButton({
         <>
           {" "}
           <button type="button" onClick={() => void runSync()} className="text-link font-medium">
-            Retry
+            Tentar novamente
           </button>
         </>
       )}
@@ -142,7 +142,7 @@ export function SyncButton({
         <>
           {" "}
           <button type="button" onClick={() => signIn("google")} className="text-link font-medium">
-            Reconnect
+            Reconectar
           </button>
         </>
       )}
@@ -169,7 +169,7 @@ export function SyncButton({
 
   const button = (
     <Button onClick={handleSync} disabled={loading !== false} variant={variant} size={size} className={className}>
-      {loading === "queued" ? "Queued…" : loading ? "Syncing…" : "Sync GSC"}
+      {loading === "queued" ? "Na fila…" : loading ? "Sincronizando…" : "Sincronizar GSC"}
     </Button>
   );
 

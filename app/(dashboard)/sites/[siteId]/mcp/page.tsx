@@ -25,8 +25,8 @@ export default async function McpPage({ params }: Props) {
   return (
     <div>
       <PageHeader
-        title="AI & MCP"
-        description="Let your AI agent read your SEO data through the Model Context Protocol. Read-only."
+        title="IA & MCP"
+        description="Permita que agentes de IA e integrações leiam seus dados de SEO via Model Context Protocol (MCP) e API REST. Somente leitura."
       />
       <McpPageContent endpoint={`${origin}/mcp`} origin={origin} enabled={settings?.mcpEnabled ?? false} />
     </div>

@@ -79,11 +79,11 @@ export default async function CrawlPage({ params, searchParams }: Props) {
   return (
     <div>
       <PageHeader
-        title="Crawl / Audit"
+        title="Auditoria técnica (Crawl)"
         meta={
           latest
-            ? `Crawl ${crawledAt} · ${plural(pageStats.pages, "page")} crawled`
-            : "No crawl yet"
+            ? `Auditoria de ${crawledAt} · ${pageStats.pages} páginas rastreadas`
+            : "Nenhuma auditoria realizada ainda"
         }
         actions={<CrawlButton siteId={siteId} pageCeiling={crawlPageCeiling()} />}
       />
@@ -97,8 +97,8 @@ export default async function CrawlPage({ params, searchParams }: Props) {
       {!latest ? (
         <EmptyState
           illustration="empty-crawl"
-          title="No crawl yet"
-          description="Run a crawl to check titles, H1s, canonicals, broken pages, sitemap coverage, and on-page content scores."
+          title="Nenhuma auditoria realizada ainda"
+          description="Execute uma auditoria para analisar títulos, H1, links canônicos, links quebrados (404), sitemap e nota de conteúdo on-page."
         />
       ) : (
         <div className="flex flex-col gap-5">
@@ -107,45 +107,45 @@ export default async function CrawlPage({ params, searchParams }: Props) {
           )}
           <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div className="panel col-span-2 flex flex-col gap-2.5 px-5 py-[18px] lg:col-span-1">
-              <span className="text-[13px] leading-5 text-muted-foreground">Health</span>
+              <span className="text-[13px] leading-5 text-muted-foreground">Saúde técnica</span>
               <span className="font-data text-[40px] leading-[44px] font-medium tracking-[-0.03em] text-text-strong">
                 {latest.healthScore ?? "n/a"}
                 <span className="ml-1 text-[15px] tracking-normal text-muted-foreground">/100</span>
               </span>
               <span className="mono-label text-[11px] leading-[1.5] text-muted-foreground">
-                Latest completed crawl · content avg {avgContentScore ?? "n/a"}/100
+                Último crawl concluído · média de conteúdo {avgContentScore ?? "n/a"}/100
               </span>
               {noindexWarning && (
                 <span className="text-[12px] leading-[18px] text-warning">
-                  Not a healthy result: most pages are noindex and not scored
+                  Atenção: a maioria das páginas é noindex e não foi pontuada
                 </span>
               )}
             </div>
-            <CountCard label="Critical" n={bySeverity.CRITICAL} note="Blocks indexing or users" tone="danger" />
-            <CountCard label="Warning" n={bySeverity.WARNING} note="Hurts ranking" tone="warning" />
-            <CountCard label="Info" n={bySeverity.INFO} note="Worth knowing" />
+            <CountCard label="Crítico" n={bySeverity.CRITICAL} note="Bloqueia indexação ou usuários" tone="danger" />
+            <CountCard label="Aviso" n={bySeverity.WARNING} note="Prejudica o posicionamento" tone="warning" />
+            <CountCard label="Informativo" n={bySeverity.INFO} note="Oportunidade de melhoria" />
           </div>
 
           <div className="grid grid-cols-1 gap-3.5 xl:grid-cols-[2.3fr_1fr]">
             {/* Issues list with remediation */}
             <section className="panel overflow-hidden">
               <div className="flex flex-wrap items-baseline justify-between gap-2 px-4 pt-4 pb-1.5">
-                <h2 className="text-[15px] leading-5 font-semibold">Issues</h2>
+                <h2 className="text-[15px] leading-5 font-semibold">Problemas identificados</h2>
                 <span className="mono-label text-[11px] text-muted-foreground">
-                  {plural(issueTotal, "issue")}
+                  {issueTotal} {issueTotal === 1 ? "problema" : "problemas"}
                 </span>
               </div>
               {issueTotal === 0 ? (
-                <p className="px-4 pt-2 pb-6 text-[13px] text-muted-foreground">No issues found</p>
+                <p className="px-4 pt-2 pb-6 text-[13px] text-muted-foreground">Nenhum problema encontrado</p>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[640px] text-[13px]">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className={th}>Severity</th>
-                        <th className={th}>Issue</th>
-                        <th className={th}>Page</th>
-                        <th className={th}>Type</th>
+                        <th className={th}>Gravidade</th>
+                        <th className={th}>Problema</th>
+                        <th className={th}>Página</th>
+                        <th className={th}>Tipo</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border-soft">
@@ -160,7 +160,7 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                               <p className="text-text-strong">{issue.message}</p>
                               {details?.howToFix && (
                                 <p className="mt-1 text-[12px] leading-[18px] text-muted-foreground">
-                                  <span className="font-medium text-text">Fix: </span>
+                                  <span className="font-medium text-text">Correção: </span>
                                   {details.howToFix}
                                 </p>
                               )}
@@ -170,7 +170,7 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                             </td>
                             <td className="px-4 py-3 mono-label text-[11px] whitespace-nowrap text-muted-foreground">
                               {issue.type.replace(/_/g, " ")}
-                              {details?.kind === "orphan" ? " · orphan" : ""}
+                              {details?.kind === "orphan" ? " · órfã" : ""}
                             </td>
                           </tr>
                         );
@@ -179,7 +179,7 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                   </table>
                   {issueTotal > issues.length && (
                     <p className="border-t border-border bg-bg-soft px-4 py-3 text-[12px] text-muted-foreground">
-                      Showing {issues.length} of {issueTotal} issues, most severe first
+                      Exibindo {issues.length} de {issueTotal} problemas, mais graves primeiro
                     </p>
                   )}
                 </div>
@@ -187,28 +187,27 @@ export default async function CrawlPage({ params, searchParams }: Props) {
             </section>
 
             <section className="panel flex flex-col gap-2.5 self-start px-5 py-[18px]">
-              <h2 className="text-[15px] leading-5 font-semibold">Internal links</h2>
+              <h2 className="text-[15px] leading-5 font-semibold">Links internos & Conteúdo</h2>
               <div className="flex justify-between gap-3 text-[13px]">
-                <span>Orphans (no inbound link)</span>
+                <span>Páginas órfãs (sem links internos)</span>
                 <span className="font-data text-text-strong">{orphanCount}</span>
               </div>
               <div className="flex justify-between gap-3 text-[13px]">
-                <span>Content score, average</span>
+                <span>Nota média de conteúdo</span>
                 <span className="font-data text-text-strong">{avgContentScore ?? "n/a"}</span>
               </div>
               <div className="flex justify-between gap-3 text-[13px]">
-                <span>noindex (not scored)</span>
+                <span>Páginas noindex (não pontuadas)</span>
                 <span className="font-data text-text-strong">{noindexCount}</span>
               </div>
               {noindexCount > 0 && (
                 <p className="text-[12px] leading-[18px] text-muted-foreground">
-                  Pages with a noindex meta robots tag or X-Robots-Tag header are crawled and their
-                  links followed, but they do not count toward the health score or the issues.
-                  Check the list for a noindex you did not mean to set.
+                  Páginas com meta tag noindex ou cabeçalho X-Robots-Tag são rastreadas e seus links seguidos,
+                  mas não contam negativamente para a nota de saúde. Verifique a lista para confirmar se são intencionais.
                 </p>
               )}
               <a href="#crawled-pages" className="text-link text-[13px]">
-                See them in Crawled pages
+                Ver na tabela de páginas auditadas
               </a>
             </section>
           </div>
@@ -219,9 +218,9 @@ export default async function CrawlPage({ params, searchParams }: Props) {
           {pageStats.pages > 0 && (
             <section id="crawled-pages" className="scroll-mt-6">
               <div className="flex flex-col gap-1 px-1 pb-3">
-                <h2 className="text-[15px] leading-5 font-semibold">Crawled pages</h2>
+                <h2 className="text-[15px] leading-5 font-semibold">Páginas auditadas</h2>
                 <p className="text-[13px] text-muted-foreground">
-                  {plural(pageStats.pages, "page")}, each stored with full metadata
+                  {pageStats.pages} páginas com metadados e notas detalhadas
                 </p>
               </div>
               {/* Keyed: the warning's link is a soft navigation to this page, which must reset the filter. */}

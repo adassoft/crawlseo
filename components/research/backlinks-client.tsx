@@ -67,17 +67,17 @@ export function BacklinksClient({
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
           <div className="text-sm">
             <p className="font-medium text-text-strong">
-              Limited backlink data
+              Dados de backlinks limitados
             </p>
             <p className="mt-0.5 text-muted-foreground">
-              Add a DataForSEO API key in{" "}
+              Adicione uma chave do DataForSEO em{" "}
               <Link
                 href="/settings?connect=dataforseo#connections"
                 className="text-link"
               >
-                Settings
+                Configurações
               </Link>{" "}
-              for full backlink analysis with referring domains and anchor text.
+              para obter análise completa de backlinks com domínios de referência e textos âncora.
             </p>
           </div>
         </div>
@@ -96,18 +96,18 @@ export function BacklinksClient({
         ) : (
           <LinkIcon className="size-4" />
         )}
-        {loaded ? "Refresh" : "Load backlinks"}
+        {loaded ? "Atualizar" : "Carregar backlinks"}
       </button>
 
       {/* Overview stats */}
       {overview && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatCard
-            label="Total backlinks"
+            label="Total de backlinks"
             value={overview.totalBacklinks.toLocaleString()}
           />
           <StatCard
-            label="Referring domains"
+            label="Domínios de referência"
             value={overview.referringDomains.toLocaleString()}
           />
           <StatCard
@@ -129,16 +129,16 @@ export function BacklinksClient({
               <thead>
                 <tr className="border-b border-border text-left">
                   <th className="px-4 py-3 font-medium text-muted-foreground">
-                    Referring Domain
+                    Domínio de Referência
                   </th>
                   <th className="px-4 py-3 font-medium text-muted-foreground">
-                    Target URL
+                    URL de Destino
                   </th>
                   <th className="px-4 py-3 font-medium text-muted-foreground">
-                    Anchor Text
+                    Texto Âncora
                   </th>
                   <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Type
+                    Tipo
                   </th>
                 </tr>
               </thead>
@@ -183,8 +183,8 @@ export function BacklinksClient({
             </table>
           </div>
           <div className="border-t border-border bg-bg-soft px-4 py-2 text-xs text-muted-foreground">
-            {backlinks.length} backlink{backlinks.length !== 1 ? "s" : ""}
-            {source === "dataforseo" ? " via DataForSEO" : " from crawl data"}
+            {backlinks.length} {backlinks.length === 1 ? "backlink" : "backlinks"}
+            {source === "dataforseo" ? " via DataForSEO" : " a partir dos dados do crawl"}
           </div>
         </div>
       )}
@@ -193,11 +193,11 @@ export function BacklinksClient({
       {loaded && backlinks.length === 0 && (
         <div className="panel flex flex-col items-center py-12 text-center">
           <LinkIcon className="size-10 text-text-faint" />
-          <p className="mt-3 font-medium text-text-strong">No backlinks found</p>
+          <p className="mt-3 font-medium text-text-strong">Nenhum backlink encontrado</p>
           <p className="mt-1 text-sm text-muted-foreground">
             {source === "none"
-              ? "Run a site crawl first to discover external links, or add a DataForSEO API key for full backlink data"
-              : "No backlink data available"}
+              ? "Execute uma auditoria técnica (Crawl) primeiro para descobrir links externos, ou adicione uma chave do DataForSEO para dados completos"
+              : "Nenhum dado de backlink disponível"}
           </p>
         </div>
       )}

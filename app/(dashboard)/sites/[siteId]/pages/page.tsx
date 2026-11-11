@@ -30,8 +30,8 @@ export default async function PagesPage({ params }: PagesPageProps) {
   return (
     <div>
       <PageHeader
-        title="Pages"
-        description="Landing pages from Search Console, aggregated over the last 28 days."
+        title="Páginas"
+        description="Páginas de destino do Search Console agregadas nos últimos 28 dias."
         reserveStatus
         actions={
           <div className="flex flex-wrap items-center gap-2">
@@ -44,8 +44,8 @@ export default async function PagesPage({ params }: PagesPageProps) {
       {pages.length === 0 ? (
         <EmptyState
           illustration="empty-pages"
-          title="No pages yet"
-          description="Sync GSC to pull page-level clicks, impressions, and positions."
+          title="Nenhuma página ainda"
+          description="Sincronize com o GSC para carregar cliques, impressões e posições por página."
         />
       ) : (
         <PagesTable

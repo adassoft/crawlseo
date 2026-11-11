@@ -36,8 +36,8 @@ export default async function AllSitesPage() {
     return (
       <div>
         <PageHeader
-          title="All sites"
-          description="Connect Google Search Console properties to track rankings, traffic, and opportunity."
+          title="Todos os sites"
+          description="Conecte propriedades do Google Search Console para monitorar rankings, tráfego e oportunidades."
         />
         <OnboardingChecklist
           hasSites={false}
@@ -47,9 +47,9 @@ export default async function AllSitesPage() {
         />
         <EmptyState
           illustration="empty-sites"
-          title="No sites connected"
-          description="Choose a domain or URL-prefix property from Search Console. crawlseo stores your metrics locally and asks for read-only access."
-          action={<AddSiteModal triggerLabel="Connect first site" />}
+          title="Nenhum site conectado"
+          description="Selecione um domínio ou propriedade do Search Console. O CrawlSEO armazena suas métricas localmente com acesso seguro de somente leitura."
+          action={<AddSiteModal triggerLabel="Conectar primeiro site" />}
         />
       </div>
     );
@@ -77,8 +77,8 @@ export default async function AllSitesPage() {
   return (
     <div>
       <PageHeader
-        title="All sites"
-        description={`${sites.length} site${sites.length === 1 ? "" : "s"} · last 28 days vs prior period`}
+        title="Todos os sites"
+        description={`${sites.length} ${sites.length === 1 ? "site" : "sites"} · últimos 28 dias vs período anterior`}
         actions={<AddSiteModal />}
       />
 
@@ -111,24 +111,24 @@ export default async function AllSitesPage() {
 
               {!metrics ? (
                 <div className="mt-5 rounded-md border border-dashed border-line-strong px-3 py-4 text-sm text-muted-foreground">
-                  Waiting for first GSC sync…
+                  Aguardando primeira sincronização do GSC…
                 </div>
               ) : (
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <Stat
-                    label="Clicks"
+                    label="Cliques"
                     value={formatCompact(metrics.current.clicks)}
                     delta={formatDeltaPercent(metrics.deltas.clicks)}
                     positive={metrics.deltas.clicks >= 0}
                   />
                   <Stat
-                    label="Impressions"
+                    label="Impressões"
                     value={formatCompact(metrics.current.impressions)}
                     delta={formatDeltaPercent(metrics.deltas.impressions)}
                     positive={metrics.deltas.impressions >= 0}
                   />
                   <Stat
-                    label="Avg position"
+                    label="Posição média"
                     value={
                       metrics.current.avgPosition > 0
                         ? metrics.current.avgPosition.toFixed(1)
@@ -142,17 +142,17 @@ export default async function AllSitesPage() {
                     positive={metrics.deltas.avgPosition >= 0}
                   />
                   <Stat
-                    label="Keywords"
+                    label="Palavras-chave"
                     value={metrics.current.uniqueKeywords.toLocaleString()}
                   />
                 </div>
               )}
 
               <p className="mt-4 font-data text-[12px] text-muted-foreground">
-                {`${formatCompact(site._count.keywords)} keyword rows · ${formatCompact(site._count.pages)} page rows · ${site._count.crawls} crawl${site._count.crawls === 1 ? "" : "s"}`}
+                {`${formatCompact(site._count.keywords)} palavras · ${formatCompact(site._count.pages)} páginas · ${site._count.crawls} ${site._count.crawls === 1 ? "auditoria" : "auditorias"}`}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Added {formatDay(site.createdAt, { year: true })}
+                Adicionado em {formatDay(site.createdAt, { year: true })}
               </p>
             </Link>
 

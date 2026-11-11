@@ -46,12 +46,12 @@ export type GoogleConnection = {
 const GSC_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 
 const SCOPE_LABELS: Record<string, string> = {
-  openid: "Sign-in",
-  email: "Email address",
-  profile: "Name and picture",
-  "https://www.googleapis.com/auth/userinfo.email": "Email address",
-  "https://www.googleapis.com/auth/userinfo.profile": "Name and picture",
-  "https://www.googleapis.com/auth/webmasters.readonly": "Search Console, read-only",
+  openid: "Login",
+  email: "Endereço de e-mail",
+  profile: "Nome e foto de perfil",
+  "https://www.googleapis.com/auth/userinfo.email": "Endereço de e-mail",
+  "https://www.googleapis.com/auth/userinfo.profile": "Nome e foto de perfil",
+  "https://www.googleapis.com/auth/webmasters.readonly": "Search Console (somente leitura)",
 };
 
 type Field = { name: "login" | "password" | "apiKey"; label: string; type: "text" | "password" };
@@ -75,42 +75,42 @@ const KEY_PROVIDERS: KeyProviderConfig[] = [
   {
     provider: "bing",
     name: "Bing Webmaster Tools",
-    description: "Bing queries, pages, crawl and index stats. Free.",
+    description: "Consultas, páginas, rastreamento e indexação do Bing. Gratuito.",
     icon: Search,
-    fields: [{ name: "apiKey", label: "API key", type: "password" }],
-    help: "In Bing Webmaster Tools open Settings, API access, then Generate API key. One key covers every verified site on that account; generating a new one invalidates the old.",
-    helpLink: { href: "https://www.bing.com/webmasters", label: "Open Bing Webmaster Tools" },
+    fields: [{ name: "apiKey", label: "Chave de API", type: "password" }],
+    help: "No Bing Webmaster Tools, abra Configurações > Acesso via API > Gerar chave de API. Uma chave cobre todos os sites verificados dessa conta.",
+    helpLink: { href: "https://www.bing.com/webmasters", label: "Abrir Bing Webmaster Tools" },
     testable: true,
     disconnectNote:
-      "Every site loses its Bing property, and the Bing data synced for your sites is deleted.",
+      "Todos os sites perderão a conexão com o Bing e os dados sincronizados serão excluídos.",
   },
   {
     provider: "dataforseo",
     name: "DataForSEO",
-    description: "Keyword research, domain analysis and backlink data. Paid per request.",
+    description: "Pesquisa de termos, análise de domínio e backlinks. Pago por requisição.",
     icon: Database,
     fields: [
-      { name: "login", label: "API login", type: "text" },
-      { name: "password", label: "API password", type: "password" },
+      { name: "login", label: "Login da API", type: "text" },
+      { name: "password", label: "Senha da API", type: "password" },
     ],
-    help: "Your API login and password are on the DataForSEO API access page. The API password is not your dashboard password.",
-    helpLink: { href: "https://app.dataforseo.com/api-access", label: "Open DataForSEO API access" },
+    help: "Seu login e senha de API estão na página de Acesso à API do DataForSEO.",
+    helpLink: { href: "https://app.dataforseo.com/api-access", label: "Abrir Acesso à API do DataForSEO" },
     testable: true,
-    disconnectNote: "Keyword research, domain overview and backlinks fall back to Search Console data.",
+    disconnectNote: "Pesquisa de termos, análise de domínio e backlinks voltarão a exibir dados básicos do Search Console.",
   },
   {
     provider: "google_pagespeed",
     name: "Google PageSpeed Insights",
-    description: "Core Web Vitals and Lighthouse lab data for your top pages, on your own quota.",
+    description: "Core Web Vitals e dados do Lighthouse para suas principais páginas com sua própria cota.",
     icon: Gauge,
-    fields: [{ name: "apiKey", label: "API key", type: "password" }],
-    help: "Create an API key in the Google Cloud console and enable the PageSpeed Insights API in the same project. Without a key, vitals use the shared quota.",
+    fields: [{ name: "apiKey", label: "Chave de API", type: "password" }],
+    help: "Crie uma chave de API no console do Google Cloud e ative a PageSpeed Insights API no mesmo projeto.",
     helpLink: {
       href: "https://console.cloud.google.com/apis/credentials",
-      label: "Open Google Cloud credentials",
+      label: "Abrir credenciais do Google Cloud",
     },
     testable: false,
-    disconnectNote: "Vitals checks go back to the shared quota.",
+    disconnectNote: "As verificações de Core Web Vitals voltarão a usar a cota compartilhada.",
   },
 ];
 
@@ -164,11 +164,11 @@ export function ConnectionsSection({
 function StatusBadge({ connected }: { connected: boolean }) {
   return connected ? (
     <span className="mono-label inline-flex shrink-0 items-center rounded-md border border-success/30 bg-success-bg px-2 py-0.5 text-[11px] leading-4 text-success">
-      Connected
+      Conectado
     </span>
   ) : (
     <span className="mono-label inline-flex shrink-0 items-center rounded-md border border-border px-2 py-0.5 text-[11px] leading-4 text-muted-foreground">
-      Not connected
+      Não conectado
     </span>
   );
 }
@@ -227,7 +227,7 @@ function GoogleRow({ google }: { google: GoogleConnection }) {
       }}
     >
       {connecting && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-      Connect
+      Conectar
     </Button>
   );
 
@@ -239,10 +239,10 @@ function GoogleRow({ google }: { google: GoogleConnection }) {
         connected={gscGranted}
         description={
           gscGranted
-            ? "Your Google sign-in reads Search Console for your sites."
+            ? "Seu login do Google lê dados do Search Console para os seus sites."
             : google.connected
-              ? "Search Console access was not granted at sign-in. Connect to grant it."
-              : "No Google tokens are stored, so Search Console cannot sync. Connect to grant access again."
+              ? "O acesso ao Search Console não foi concedido no login. Conecte para conceder a permissão."
+              : "Nenhum token do Google armazenado, portanto o Search Console não pode sincronizar. Conecte para autorizar o acesso."
         }
         actions={
           gscGranted ? (
@@ -262,14 +262,14 @@ function GoogleRow({ google }: { google: GoogleConnection }) {
         <div className="mt-3 sm:pl-[50px]">
           {labels.length > 0 && (
             <p className="text-[13px] leading-5 text-text">
-              <span className="text-muted-foreground">Access: </span>
+              <span className="text-muted-foreground">Acesso: </span>
               {labels.join(", ")}
             </p>
           )}
           <p className="mt-1 text-[13px] leading-5 text-muted-foreground">
             {google.sealed
-              ? "Tokens are stored encrypted on this server."
-              : "Tokens are stored on this server and are encrypted at the next refresh."}
+              ? "Tokens armazenados de forma criptografada neste servidor."
+              : "Tokens armazenados neste servidor e criptografados na próxima atualização."}
           </p>
           {google.scopes.length > 0 && (
             <>
@@ -280,7 +280,7 @@ function GoogleRow({ google }: { google: GoogleConnection }) {
                 onClick={() => setShowDetails((v) => !v)}
                 className="mt-2 inline-flex items-center gap-1 text-[13px] leading-5 text-link"
               >
-                Details
+                Detalhes
                 <ChevronDown
                   className={cn("size-3.5 transition-transform", showDetails && "rotate-180")}
                   aria-hidden
@@ -291,7 +291,7 @@ function GoogleRow({ google }: { google: GoogleConnection }) {
                   {google.scopes.map((scope) => (
                     <li key={scope} className="flex flex-col gap-0.5 text-[12px] leading-4 sm:flex-row sm:gap-3">
                       <span className="text-text-strong sm:w-44 sm:shrink-0">
-                        {SCOPE_LABELS[scope] ?? "Other"}
+                        {SCOPE_LABELS[scope] ?? "Outro"}
                       </span>
                       <span className="font-data break-all text-muted-foreground">{scope}</span>
                     </li>
@@ -347,7 +347,7 @@ function KeyRow({
         connected={connected}
         description={
           connected && status?.updatedAt
-            ? `${config.description} Key saved ${formatDay(status.updatedAt, { year: true })}.`
+            ? `${config.description} Chave salva em ${formatDay(status.updatedAt, { year: true })}.`
             : config.description
         }
         actions={
@@ -363,7 +363,7 @@ function KeyRow({
                   onExpand(true);
                 }}
               >
-                Replace
+                Substituir
               </Button>
               <DisconnectKeyDialog
                 config={config}
@@ -376,7 +376,7 @@ function KeyRow({
             </>
           ) : (
             <Button size="sm" variant="outline" data-return-focus="" onClick={() => onExpand(true)}>
-              Connect
+              Conectar
             </Button>
           )
         }
@@ -418,11 +418,11 @@ type TestResult = { ok: boolean; text: string };
 
 /** What a saved-key test means to the user, by response status. */
 export function savedTestMessage(status: number, success: boolean | undefined): TestResult {
-  if (success === true) return { ok: true, text: "The saved key works." };
-  if (status === 401) return { ok: false, text: "Your session ended. Sign in again to test the key." };
-  if (status === 404) return { ok: false, text: "No key is saved for this service." };
-  if (status === 200) return { ok: false, text: "The service did not accept the saved key. Replace it." };
-  return { ok: false, text: "The connection test could not run. Try again." };
+  if (success === true) return { ok: true, text: "A chave salva está funcionando corretamente." };
+  if (status === 401) return { ok: false, text: "Sua sessão expirou. Entre novamente para testar a chave." };
+  if (status === 404) return { ok: false, text: "Nenhuma chave salva para este serviço." };
+  if (status === 200) return { ok: false, text: "O serviço não aceitou a chave salva. Substitua-a." };
+  return { ok: false, text: "O teste de conexão não pôde ser executado. Tente novamente." };
 }
 
 /**
@@ -460,7 +460,7 @@ function SavedKeyTest({
   return (
     <Button size="sm" variant="outline" disabled={testing} onClick={handleTest}>
       {testing && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-      Test connection
+      Testar conexão
     </Button>
   );
 }
@@ -493,7 +493,7 @@ function KeyForm({
     setInvalid(missing.map((f) => f.name));
     if (missing.length > 0) {
       setTestResult(null);
-      setError(`Enter the ${missing.map((f) => f.label).join(" and ")}.`);
+      setError(`Informe o campo ${missing.map((f) => f.label).join(" e ")}.`);
       return null;
     }
     return Object.fromEntries(config.fields.map((f) => [f.name, values[f.name].trim()]));
@@ -513,10 +513,10 @@ function KeyForm({
       });
       const data = await res.json();
       setTestResult(data.success === true);
-      if (!data.success) setError("The service did not accept these credentials.");
+      if (!data.success) setError("O serviço não aceitou estas credenciais.");
     } catch {
       setTestResult(false);
-      setError("The connection test could not run. Try again.");
+      setError("O teste de conexão não pôde ser executado. Tente novamente.");
     } finally {
       setTesting(false);
     }
@@ -538,10 +538,10 @@ function KeyForm({
         onSaved();
       } else {
         const data = await res.json().catch(() => ({}));
-        setError(data.error || "The key could not be saved.");
+        setError(data.error || "Não foi possível salvar a chave.");
       }
     } catch {
-      setError("The key could not be saved.");
+      setError("Não foi possível salvar a chave.");
     } finally {
       setSaving(false);
     }
@@ -552,7 +552,7 @@ function KeyForm({
       <div className={cn(FORM_MAX_WIDTH, "space-y-3")}>
         {replacing && (
           <p className="text-[13px] leading-5 text-text">
-            The new key replaces the saved one for all your sites. Data already synced stays.
+            A nova chave substituirá a atual em todos os seus sites. Os dados já sincronizados serão mantidos.
           </p>
         )}
         {config.fields.map((field, i) => {
@@ -591,7 +591,7 @@ function KeyForm({
                   >
                     {config.helpLink.label}
                     <ExternalLink className="size-3" aria-hidden />
-                    <span className="sr-only"> (opens in a new tab)</span>
+                    <span className="sr-only"> (abre em nova aba)</span>
                   </a>
                 </p>
               )}
@@ -607,7 +607,7 @@ function KeyForm({
         {testResult === true && (
           <p role="status" className="flex items-center gap-1.5 text-xs text-success">
             <CheckCircle2 className="size-3.5" aria-hidden />
-            Connection works. Save the key to use it.
+            Conexão bem-sucedida! Salve a chave para utilizá-la.
           </p>
         )}
       </div>
@@ -615,16 +615,16 @@ function KeyForm({
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <Button type="submit" size="sm" disabled={saving || testing}>
           {saving && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-          {replacing ? "Save new key" : "Save"}
+          {replacing ? "Salvar nova chave" : "Salvar"}
         </Button>
         {config.testable && (
           <Button type="button" size="sm" variant="outline" disabled={saving || testing} onClick={handleTest}>
             {testing && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-            Test connection
+            Testar conexão
           </Button>
         )}
         <Button type="button" size="sm" variant="ghost" disabled={saving} onClick={onCancel}>
-          Cancel
+          Cancelar
         </Button>
       </div>
     </form>
@@ -655,7 +655,7 @@ function DisconnectKeyDialog({
       setOpen(false);
       onDisconnected();
     } catch {
-      setError("The key could not be removed. Try again.");
+      setError("A chave não pôde ser removida. Tente novamente.");
     } finally {
       setDeleting(false);
     }
@@ -663,12 +663,12 @@ function DisconnectKeyDialog({
 
   return (
     <Dialog open={open} onOpenChange={(next) => !deleting && setOpen(next)}>
-      <DialogTrigger render={<Button size="sm" variant="outline" />}>Disconnect</DialogTrigger>
+      <DialogTrigger render={<Button size="sm" variant="outline" />}>Desconectar</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Disconnect {config.name}?</DialogTitle>
+          <DialogTitle>Desconectar {config.name}?</DialogTitle>
           <DialogDescription>
-            The stored key is deleted for all your sites. {config.disconnectNote}
+            A chave salva será excluída para todos os seus sites. {config.disconnectNote}
           </DialogDescription>
         </DialogHeader>
         {error && (
@@ -678,11 +678,11 @@ function DisconnectKeyDialog({
         )}
         <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
           <DialogClose render={<Button type="button" variant="outline" disabled={deleting} />}>
-            Cancel
+            Cancelar
           </DialogClose>
           <Button type="button" variant="destructive" disabled={deleting} onClick={handleDisconnect}>
             {deleting && <Loader2 className="size-4 animate-spin" aria-hidden />}
-            Disconnect
+            Desconectar
           </Button>
         </div>
       </DialogContent>

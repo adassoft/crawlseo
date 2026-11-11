@@ -37,7 +37,7 @@ export function SiteSwitcher({
   const pathname = usePathname();
   const items = workspaceItems(pathname, sites, extraSubPages);
   const current = items.find((i) => i.kind !== "add" && i.current);
-  const label = current?.label ?? "All sites";
+  const label = current?.label ?? "Todos os sites";
   const onSite = current?.kind === "site";
 
   // The menu closes on Add site, then this handle opens the add-site dialog.
@@ -47,7 +47,7 @@ export function SiteSwitcher({
     <>
       <Menu.Root>
         <Menu.Trigger
-          aria-label={`Workspace: ${label}`}
+          aria-label={`Espaço de trabalho: ${label}`}
           title={collapsed ? label : undefined}
           className={cn(
             "flex items-center rounded-md border border-border bg-bg font-data text-[13px] text-text-strong transition-colors outline-none hover:border-line-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-popup-open:border-line-strong",

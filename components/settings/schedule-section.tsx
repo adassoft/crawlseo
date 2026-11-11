@@ -10,11 +10,11 @@ const SELECT_CLASS =
 
 /** How an interval reads in the list. */
 export function intervalLabel(days: number): string {
-  if (days === 0) return "Off";
-  if (days === 1) return "Every day";
-  if (days === 7) return "Every week";
-  if (days % 7 === 0) return `Every ${days / 7} weeks`;
-  return `Every ${days} days`;
+  if (days === 0) return "Desativado";
+  if (days === 1) return "Todos os dias";
+  if (days === 7) return "Toda semana";
+  if (days % 7 === 0) return `A cada ${days / 7} semanas`;
+  return `A cada ${days} dias`;
 }
 
 type Kind = "crawl" | "vitals";
@@ -22,14 +22,14 @@ type Kind = "crawl" | "vitals";
 const KINDS: { kind: Kind; label: string; description: string; env: string }[] = [
   {
     kind: "crawl",
-    label: "Crawl",
-    description: "A crawl of each of your sites, with the page count of its last crawl.",
+    label: "Auditoria técnica (Crawl)",
+    description: "Uma auditoria de páginas de cada site, respeitando o limite da última execução.",
     env: "SCHEDULE_CRAWL_DAYS",
   },
   {
     kind: "vitals",
-    label: "Vitals check",
-    description: "A Core Web Vitals check of each of your sites. Each check uses PageSpeed Insights quota.",
+    label: "Verificação de Core Web Vitals",
+    description: "Uma checagem de Core Web Vitals para cada um dos seus sites via cota do PageSpeed Insights.",
     env: "SCHEDULE_VITALS_DAYS",
   },
 ];
@@ -66,11 +66,11 @@ export function ScheduleSection({ initial }: { initial: ScheduleView }) {
         body: JSON.stringify({ crawlDays: days(values.crawl), vitalsDays: days(values.vitals) }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "The schedule could not be saved.");
+      if (!res.ok) throw new Error(data.error || "Não foi possível salvar o agendamento.");
       setView(data as ScheduleView);
-      setMessage({ ok: true, text: "Schedule saved. It applies from the next scheduling pass, within 10 minutes." });
+      setMessage({ ok: true, text: "Agendamento salvo. Ele entrará em vigor na próxima verificação, em até 10 minutos." });
     } catch (err) {
-      setMessage({ ok: false, text: err instanceof Error ? err.message : "The schedule could not be saved." });
+      setMessage({ ok: false, text: err instanceof Error ? err.message : "Não foi possível salvar o agendamento." });
     } finally {
       setSaving(false);
     }
@@ -85,14 +85,13 @@ export function ScheduleSection({ initial }: { initial: ScheduleView }) {
         <div className="min-w-0 flex-1 space-y-5">
           {!server.schedulerEnabled && (
             <p className="text-[13px] leading-5 text-text">
-              The schedule is turned off on this server (<code className="font-data">SCHEDULER_ENABLED=false</code>).
-              Crawls and vitals checks run only when you start them.
+              O agendamento automático está desativado neste servidor (<code className="font-data">SCHEDULER_ENABLED=false</code>).
+              Auditorias e verificações de vitals são executadas somente sob demanda.
             </p>
           )}
           {server.serverless && (
             <p className="text-[13px] leading-5 text-text">
-              This instance runs on a serverless host. Scheduled crawls and vitals checks run only on Docker
-              installs, or when a worker is connected to this database.
+              Esta instância roda em ambiente serverless. Agendamentos automáticos requerem instalação Docker ou um worker conectado a este banco de dados.
             </p>
           )}
           {KINDS.map(({ kind, label, description, env }) => {
@@ -110,7 +109,7 @@ export function ScheduleSection({ initial }: { initial: ScheduleView }) {
                   {serverOff && defaults[kind] === 0 && server.schedulerEnabled && (
                     <>
                       {" "}
-                      Turned off on this server (<code className="font-data">{env}=0</code>).
+                      Desativado no servidor (<code className="font-data">{env}=0</code>).
                     </>
                   )}
                 </p>
@@ -127,7 +126,7 @@ export function ScheduleSection({ initial }: { initial: ScheduleView }) {
                   className={`mt-2 ${SELECT_CLASS}`}
                 >
                   <option value="default">
-                    Server default ({serverOff ? "off" : intervalLabel(defaults[kind]).toLowerCase()})
+                    Padrão do servidor ({serverOff ? "desativado" : intervalLabel(defaults[kind]).toLowerCase()})
                   </option>
                   {choices.map((d) => (
                     <option key={d} value={String(d)}>
@@ -146,7 +145,7 @@ export function ScheduleSection({ initial }: { initial: ScheduleView }) {
           )}
           <Button type="submit" size="sm" disabled={saving || !changed}>
             {saving && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-            Save schedule
+            Salvar agendamento
           </Button>
         </div>
       </div>

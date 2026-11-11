@@ -74,26 +74,26 @@ export default async function SettingsPage({ searchParams }: Props) {
   return (
     <div>
       <PageHeader
-        title="Settings"
-        description="Your profile, the services crawlseo connects to, the schedule, alert delivery, MCP access and your account."
+        title="Configurações"
+        description="Seu perfil, conexões com serviços externos, agendamento de auditorias, alertas, chaves de API e acesso MCP."
       />
 
       <div className="space-y-10">
         <section aria-labelledby="profile-heading">
           <SectionHeading
             id="profile-heading"
-            title="Profile"
-            description="From your Google account, updated each time you sign in."
+            title="Perfil"
+            description="Dados da sua conta Google, atualizados a cada login."
           />
           <div className="panel flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-4">
               <Avatar name={user.name} email={user.email} image={user.image} className="size-12 text-[13px]" />
               <dl className="min-w-0">
-                <dt className="sr-only">Name</dt>
+                <dt className="sr-only">Nome</dt>
                 <dd className="truncate text-[15px] leading-5 font-medium text-text-strong">
-                  {user.name || <span className="font-normal text-muted-foreground">No name from Google yet</span>}
+                  {user.name || <span className="font-normal text-muted-foreground">Sem nome do Google ainda</span>}
                 </dd>
-                <dt className="sr-only">Email</dt>
+                <dt className="sr-only">E-mail</dt>
                 <dd className="mt-0.5 font-data text-[13px] leading-5 break-all text-muted-foreground">{user.email}</dd>
               </dl>
             </div>
@@ -104,8 +104,8 @@ export default async function SettingsPage({ searchParams }: Props) {
         <section id="connections" aria-labelledby="connections-heading" className="scroll-mt-6">
           <SectionHeading
             id="connections-heading"
-            title="Connections"
-            description="Each connection is stored once for your account and used by every site."
+            title="Conexões e APIs"
+            description="Cada conexão é salva na sua conta e compartilhada com todos os seus sites."
           />
           <ConnectionsSection
             google={{
@@ -121,8 +121,8 @@ export default async function SettingsPage({ searchParams }: Props) {
         <section id="schedule" aria-labelledby="schedule-heading" className="scroll-mt-6">
           <SectionHeading
             id="schedule-heading"
-            title="Schedule"
-            description="How often your sites are crawled and get a vitals check. GSC and Bing syncs run each day."
+            title="Agendamento automático"
+            description="Frequência das auditorias técnicas (crawl) e medições de Core Web Vitals. Sincronizações com o GSC ocorrem diariamente."
           />
           <ScheduleSection initial={{ ...schedule, server: scheduleServerInfo() }} />
         </section>
@@ -130,8 +130,8 @@ export default async function SettingsPage({ searchParams }: Props) {
         <section id="webhook" aria-labelledby="webhook-heading" className="scroll-mt-6">
           <SectionHeading
             id="webhook-heading"
-            title="Alert webhook"
-            description="Send fired alerts to your own endpoint, such as n8n, Zapier or a script of yours."
+            title="Webhook de alertas"
+            description="Envie notificações de alertas disparados para seu webhook (n8n, Zapier, endpoints próprios)."
           />
           <WebhookSection initial={webhook} />
         </section>
@@ -139,8 +139,8 @@ export default async function SettingsPage({ searchParams }: Props) {
         <section id="email" aria-labelledby="email-heading" className="scroll-mt-6">
           <SectionHeading
             id="email-heading"
-            title="Email alerts"
-            description="Email fired alerts through the SMTP server this instance is set up with."
+            title="Alertas por e-mail"
+            description="Receba alertas disparados através do servidor SMTP configurado nesta instância."
           />
           <EmailSection initial={email} />
         </section>
@@ -148,20 +148,19 @@ export default async function SettingsPage({ searchParams }: Props) {
         <section id="mcp" aria-labelledby="mcp-heading" className="scroll-mt-6">
           <SectionHeading
             id="mcp-heading"
-            title="MCP"
-            description="Read-only access to your sites for AI agents such as Claude Code, with access keys you create here."
+            title="Acesso MCP & API"
+            description="Acesso somente leitura para agentes de IA e integrações externas (como o painel AdasSoft), com chaves geradas aqui."
           />
           <McpSection initial={mcp} endpoint={mcpEndpoint} />
         </section>
 
         <section aria-labelledby="danger-heading">
-          <SectionHeading id="danger-heading" title="Danger zone" description="This cannot be undone." />
+          <SectionHeading id="danger-heading" title="Zona de perigo" description="Esta ação é irreversível." />
           <div className="panel flex flex-col gap-4 border-danger/30 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="text-[15px] leading-5 font-medium text-text-strong">Delete account</h3>
+              <h3 className="text-[15px] leading-5 font-medium text-text-strong">Excluir conta</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Deletes your account, every site and all its data on this instance, and revokes Google
-                access.
+                Exclui permanentemente sua conta, todos os sites e dados cadastrados nesta instância, revogando o acesso do Google.
               </p>
             </div>
             <DeleteAccountDialog email={user.email} registrationClosed={registrationClosed} />

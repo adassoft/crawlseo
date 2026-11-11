@@ -46,35 +46,35 @@ export default async function SettingsPage({ params }: Props) {
   return (
     <div>
       <PageHeader
-        title="Site settings"
-        description={`Configuration and stored data for ${site.domain}. API keys and Google live in Settings and apply to all sites.`}
+        title="Configurações do site"
+        description={`Configurações e dados armazenados para ${site.domain}. Chaves de API globais e conta Google ficam nas Configurações gerais.`}
       />
 
       <div className="space-y-6">
         {/* Site info */}
         <div className="panel p-5">
           <h3 className="text-[15px] leading-5 font-semibold text-text-strong">
-            Site details
+            Detalhes do site
           </h3>
           <dl className="mt-4 space-y-3 text-sm">
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Domain</dt>
+              <dt className="text-muted-foreground">Domínio</dt>
               <dd className="font-medium text-text-strong">{site.domain}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">GSC property</dt>
+              <dt className="text-muted-foreground">Propriedade no GSC</dt>
               <dd className="font-medium text-text-strong">
-                {site.gscProperty || "Not connected"}
+                {site.gscProperty || "Não conectado"}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Bing property</dt>
+              <dt className="text-muted-foreground">Propriedade no Bing</dt>
               <dd className="font-medium text-text-strong">
-                {site.bingSite || "Not connected"}
+                {site.bingSite || "Não conectado"}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Added</dt>
+              <dt className="text-muted-foreground">Adicionado em</dt>
               <dd className="font-medium text-text-strong">
                 {formatDay(site.createdAt, { year: true })}
               </dd>
@@ -87,9 +87,9 @@ export default async function SettingsPage({ params }: Props) {
           <BingSiteSection siteId={siteId} bingSite={site.bingSite} />
         ) : (
           <p className="panel px-5 py-4 text-sm text-muted-foreground">
-            Bing Webmaster Tools is not connected.{" "}
+            Bing Webmaster Tools não está conectado.{" "}
             <Link href="/settings?connect=bing#connections" className="text-link font-medium">
-              Connect Bing in Settings
+              Conectar Bing nas Configurações
             </Link>
           </p>
         )}
@@ -97,26 +97,25 @@ export default async function SettingsPage({ params }: Props) {
         {/* Data summary */}
         <section aria-labelledby="stored-data-heading">
           <h3 id="stored-data-heading" className="mb-3 text-[15px] leading-5 font-semibold text-text-strong">
-            Stored data
+            Dados armazenados
           </h3>
           <ul className="panel divide-y divide-border-soft">
-            <DataStat label="Keyword records" value={site._count.keywords} />
-            <DataStat label="Page records" value={site._count.pages} />
-            <DataStat label="Crawls" value={site._count.crawls} />
-            <DataStat label="Vitals reports" value={site._count.vitals} />
-            <DataStat label="Alert rules" value={site._count.alerts} />
-            <DataStat label="Saved keywords" value={site._count.savedKeywords} />
+            <DataStat label="Registros de palavras-chave" value={site._count.keywords} />
+            <DataStat label="Registros de páginas" value={site._count.pages} />
+            <DataStat label="Auditorias (crawls)" value={site._count.crawls} />
+            <DataStat label="Relatórios de vitals" value={site._count.vitals} />
+            <DataStat label="Regras de alerta" value={site._count.alerts} />
+            <DataStat label="Palavras salvas" value={site._count.savedKeywords} />
           </ul>
         </section>
 
         {/* Danger zone */}
         <div className="panel border-danger/30 p-5">
           <h3 className="text-[15px] leading-5 font-semibold text-danger">
-            Danger zone
+            Zona de perigo
           </h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Permanently delete this site and all associated data. This action
-            cannot be undone.
+            Excluir permanentemente este site e todos os dados associados. Esta ação não pode ser desfeita.
           </p>
           <div className="mt-4">
             <DeleteSiteButton siteId={siteId} domain={site.domain} />

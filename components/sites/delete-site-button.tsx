@@ -33,7 +33,7 @@ export function DeleteSiteButton({
     return (
       <Button variant="destructive" size="sm" onClick={() => setConfirming(true)}>
         <Trash2 className="size-3.5" />
-        Delete site
+        Excluir site
       </Button>
     );
   }
@@ -41,7 +41,7 @@ export function DeleteSiteButton({
   return (
     <div className="flex items-center gap-3">
       <p className="text-sm text-danger">
-        Delete <strong>{domain}</strong> and all data?
+        Excluir <strong>{domain}</strong> e todos os dados associados?
       </p>
       <Button
         variant="destructive"
@@ -49,14 +49,14 @@ export function DeleteSiteButton({
         onClick={handleDelete}
         disabled={loading}
       >
-        {loading ? "Deleting..." : "Yes, delete"}
+        {loading ? "Excluindo..." : "Sim, excluir"}
       </Button>
       <Button
         variant="ghost"
         size="sm"
         onClick={() => setConfirming(false)}
       >
-        Cancel
+        Cancelar
       </Button>
     </div>
   );

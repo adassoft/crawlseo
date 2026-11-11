@@ -16,17 +16,17 @@ export function deliveryLine(d: LastDelivery): { ok: boolean; text: string } {
   const http = d.httpStatus ? ` (HTTP ${d.httpStatus})` : "";
   switch (d.status) {
     case "delivered":
-      return { ok: true, text: `Last delivery: delivered${http}, ${at}.` };
+      return { ok: true, text: `Último envio: entregue com sucesso${http}, em ${at}.` };
     case "queued":
     case "running":
-      return { ok: true, text: "Last delivery: sending now." };
+      return { ok: true, text: "Último envio: enviando agora." };
     case "retrying":
       return {
         ok: false,
-        text: `Last delivery: attempt ${d.attempts} failed${d.error ? `: ${d.error}` : "."} Next attempt ${formatDay(d.nextAttemptAt ?? d.at, { time: true })}.`,
+        text: `Último envio: tentativa ${d.attempts} falhou${d.error ? `: ${d.error}` : "."} Próxima tentativa em ${formatDay(d.nextAttemptAt ?? d.at, { time: true })}.`,
       };
     case "failed":
-      return { ok: false, text: `Last delivery failed after ${d.attempts} attempt(s), ${at}${d.error ? `: ${d.error}` : "."}` };
+      return { ok: false, text: `Último envio falhou após ${d.attempts} tentativa(s), em ${at}${d.error ? `: ${d.error}` : "."}` };
   }
 }
 
@@ -56,7 +56,7 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
   if (!status.enabled) {
     return (
       <div className="panel p-5 text-[13px] leading-5 text-text">
-        Alert webhooks are turned off on this server (<code className="font-data">ALERT_WEBHOOKS_ENABLED=false</code>).
+        Webhooks de alerta estão desativados neste servidor (<code className="font-data">ALERT_WEBHOOKS_ENABLED=false</code>).
       </div>
     );
   }
@@ -74,14 +74,14 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setInvalid(data.field === "url" || data.field === "secret" ? data.field : null);
-        setMessage({ ok: false, text: data.error || "That did not work. Try again." });
+        setMessage({ ok: false, text: data.error || "Não foi possível concluir. Tente novamente." });
         return;
       }
       if (kind === "test") {
         setMessage(
           data.ok
-            ? { ok: true, text: `Test delivered: the webhook answered HTTP ${data.status}.` }
-            : { ok: false, text: data.error || "The test was not delivered." }
+            ? { ok: true, text: `Teste entregue: o webhook respondeu HTTP ${data.status}.` }
+            : { ok: false, text: data.error || "O envio de teste falhou." }
         );
         return;
       }
@@ -90,9 +90,9 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
       setUrl(next.url ?? "");
       setSecret("");
       setGenerated(false);
-      setMessage({ ok: true, text: kind === "save" ? "Webhook saved. Fired alerts are sent to it." : "Webhook removed." });
+      setMessage({ ok: true, text: kind === "save" ? "Webhook salvo. Alertas disparados serão enviados para este endereço." : "Webhook removido." });
     } catch {
-      setMessage({ ok: false, text: "That did not work. Try again." });
+      setMessage({ ok: false, text: "Não foi possível concluir. Tente novamente." });
     } finally {
       setBusy(null);
     }
@@ -115,18 +115,18 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
         </span>
         <div className={`min-w-0 flex-1 space-y-3 ${FORM_MAX_WIDTH}`}>
           <p className="text-[13px] leading-5 text-muted-foreground">
-            When alerts fire, crawlseo sends a JSON POST to this URL, signed with your secret in the{" "}
-            <code className="font-data">X-Crawlseo-Signature</code> header.
+            Quando alertas forem disparados, o CrawlSEO enviará um POST JSON para esta URL, assinado com o seu segredo no cabeçalho{" "}
+            <code className="font-data">X-Crawlseo-Signature</code>.
             {status.serverless
-              ? " A failed delivery is retried after 2, 10 and 30 seconds, then at the next cron run."
-              : " A failed delivery is retried after 1, 5, 25 and 60 minutes."}
+              ? " Envios que falharem serão retentados após 2, 10 e 30 segundos, e depois no próximo cron."
+              : " Envios que falharem serão retentados após 1, 5, 25 e 60 minutos."}
             {status.allowPrivate
-              ? " This server also allows addresses on private networks."
-              : " Only public addresses are allowed."}
+              ? " Este servidor também permite endereços em redes privadas."
+              : " Apenas endereços públicos são permitidos."}
           </p>
           <div>
             <label htmlFor={`${id}-url`} className="mb-1 block text-xs font-medium text-muted-foreground">
-              Webhook URL
+              URL do Webhook
             </label>
             <input
               id={`${id}-url`}
@@ -147,7 +147,7 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
           </div>
           <div>
             <label htmlFor={`${id}-secret`} className="mb-1 block text-xs font-medium text-muted-foreground">
-              Signing secret
+              Segredo de assinatura (Secret)
             </label>
             <div className="flex gap-2">
               <input
@@ -156,7 +156,7 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
                 type="password"
                 autoComplete="new-password"
                 spellCheck={false}
-                placeholder={configured ? "Saved. Leave empty to keep it" : "At least 16 characters"}
+                placeholder={configured ? "Salvo. Deixe vazio para manter" : "Mínimo de 16 caracteres"}
                 value={secret}
                 aria-invalid={invalid === "secret" || undefined}
                 aria-describedby={`${id}-secret-help`}
@@ -178,16 +178,15 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
                   setInvalid(null);
                 }}
               >
-                Generate
+                Gerar
               </Button>
             </div>
             <p id={`${id}-secret-help`} className="mt-1.5 text-xs leading-[18px] text-muted-foreground">
-              Your receiver checks the signature with this secret. It is stored encrypted and never shown again; copy it
-              before you save.
+              O seu servidor/receptor valida a assinatura com este segredo. Ele é armazenado criptografado e não será exibido novamente; copie antes de salvar.
             </p>
             {generated && secret && (
               <p className="mt-1 font-data text-xs break-all text-text">
-                <span className="sr-only">Generated secret: </span>
+                <span className="sr-only">Segredo gerado: </span>
                 {secret}
               </p>
             )}
@@ -207,16 +206,16 @@ export function WebhookSection({ initial }: { initial: WebhookStatus }) {
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Button type="submit" size="sm" disabled={busy !== null}>
               {busy === "save" && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-              {configured ? "Save changes" : "Save webhook"}
+              {configured ? "Salvar alterações" : "Salvar webhook"}
             </Button>
             <Button type="button" size="sm" variant="outline" disabled={busy !== null} onClick={() => void call("test")}>
               {busy === "test" && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-              Send test
+              Enviar teste
             </Button>
             {configured && (
               <Button type="button" size="sm" variant="outline" disabled={busy !== null} onClick={() => void call("remove")}>
                 {busy === "remove" && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-                Remove
+                Remover
               </Button>
             )}
           </div>

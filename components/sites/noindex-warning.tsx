@@ -13,9 +13,9 @@ export function NoindexWarningNotice({ warning, href }: { warning: NoindexWarnin
       <div className="space-y-1">
         <p className="text-sm font-medium text-text-strong">{warning.message}</p>
         <p className="text-xs text-muted-foreground">
-          noindex pages are not scored, so the health score and the issue count leave them out.{" "}
+          Páginas noindex não são pontuadas, portanto a pontuação de saúde e os problemas não as incluem.{" "}
           <Link href={href} className="text-link">
-            See the noindex pages
+            Ver páginas noindex
           </Link>
         </p>
       </div>

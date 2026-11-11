@@ -46,26 +46,26 @@ export function SidebarNav({
 
   const workspaceNav: NavGroup | null = activeSiteId
     ? {
-        label: "Workspace",
+        label: "Área de Trabalho",
         items: [
-          { href: `/sites/${activeSiteId}`, label: "Overview", icon: LayoutDashboard, exact: true },
-          { href: `/sites/${activeSiteId}/keywords`, label: "Keywords", icon: Search },
-          { href: `/sites/${activeSiteId}/saved-keywords`, label: "Saved keywords", icon: Bookmark },
-          { href: `/sites/${activeSiteId}/pages`, label: "Pages", icon: FileText },
-          { href: `/sites/${activeSiteId}/crawl`, label: "Crawl / Audit", icon: Bug },
-          { href: `/sites/${activeSiteId}/vitals`, label: "Vitals", icon: Gauge },
-          { href: `/sites/${activeSiteId}/opportunities`, label: "Opportunities", icon: Lightbulb },
-          { href: `/sites/${activeSiteId}/alerts`, label: "Alerts", icon: Bell },
+          { href: `/sites/${activeSiteId}`, label: "Visão Geral", icon: LayoutDashboard, exact: true },
+          { href: `/sites/${activeSiteId}/keywords`, label: "Palavras-chave", icon: Search },
+          { href: `/sites/${activeSiteId}/saved-keywords`, label: "Palavras Salvas", icon: Bookmark },
+          { href: `/sites/${activeSiteId}/pages`, label: "Páginas", icon: FileText },
+          { href: `/sites/${activeSiteId}/crawl`, label: "Auditoria (Crawl)", icon: Bug },
+          { href: `/sites/${activeSiteId}/vitals`, label: "Core Web Vitals", icon: Gauge },
+          { href: `/sites/${activeSiteId}/opportunities`, label: "Oportunidades", icon: Lightbulb },
+          { href: `/sites/${activeSiteId}/alerts`, label: "Alertas", icon: Bell },
         ],
       }
     : null;
 
   const researchNav: NavGroup | null = activeSiteId
     ? {
-        label: "Research",
+        label: "Pesquisa & Análise",
         items: [
-          { href: `/sites/${activeSiteId}/keyword-research`, label: "Keyword research", icon: SearchCheck },
-          { href: `/sites/${activeSiteId}/domain-overview`, label: "Domain overview", icon: Globe },
+          { href: `/sites/${activeSiteId}/keyword-research`, label: "Pesquisa de Termos", icon: SearchCheck },
+          { href: `/sites/${activeSiteId}/domain-overview`, label: "Visão de Domínio", icon: Globe },
           { href: `/sites/${activeSiteId}/backlinks`, label: "Backlinks", icon: LinkIcon },
         ],
       }
@@ -73,10 +73,10 @@ export function SidebarNav({
 
   const connectNav: NavGroup | null = activeSiteId
     ? {
-        label: "Connect",
+        label: "Conexões & IA",
         items: [
-          { href: `/sites/${activeSiteId}/mcp`, label: "AI & MCP", icon: Bot },
-          { href: `/sites/${activeSiteId}/settings`, label: "Site settings", icon: Settings },
+          { href: `/sites/${activeSiteId}/mcp`, label: "IA & MCP", icon: Bot },
+          { href: `/sites/${activeSiteId}/settings`, label: "Configurações do Site", icon: Settings },
         ],
       }
     : null;

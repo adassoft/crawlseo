@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/data-table";
 
 const HEADERS: MetricHeader[] = [
-  { label: "Keyword", sortKey: "query", defaultDir: "asc" },
-  { label: "Notes" },
-  { label: "Position", align: "right", sortKey: "position", defaultDir: "asc" },
-  { label: "Clicks", align: "right", sortKey: "clicks" },
+  { label: "Palavra-chave", sortKey: "query", defaultDir: "asc" },
+  { label: "Anotações" },
+  { label: "Posição", align: "right", sortKey: "position", defaultDir: "asc" },
+  { label: "Cliques", align: "right", sortKey: "clicks" },
   { label: "Impr.", align: "right", sortKey: "impressions" },
   { label: "CTR", align: "right", sortKey: "ctr" },
-  { label: "Actions", align: "right" },
+  { label: "Ações", align: "right" },
 ];
 
 export interface SavedKeywordRowData {
@@ -62,21 +62,21 @@ export function SavedKeywordsTable({
         <SearchField
           value={search}
           onChange={setSearch}
-          placeholder="Filter by keyword or note..."
+          placeholder="Filtrar por palavra ou anotação..."
         />
       </div>
 
       {filtered.length === 0 ? (
         <div className="panel px-4 py-10 text-center">
-          <p className="font-medium text-text-strong">No saved keywords match</p>
-          <p className="mt-1 text-sm text-muted-foreground">Loosen the search.</p>
+          <p className="font-medium text-text-strong">Nenhuma palavra-chave salva encontrada</p>
+          <p className="mt-1 text-sm text-muted-foreground">Ajuste o termo de busca.</p>
         </div>
       ) : (
         <MetricTable
           sort={sort}
           onSort={toggle}
           headers={HEADERS}
-          footer={`Showing ${filtered.length} of ${rows.length} saved keywords · last 28 days aggregated · sorted by ${sortLabel(HEADERS, sort)}`}
+          footer={`Exibindo ${filtered.length} de ${rows.length} palavras-chave salvas · últimos 28 dias agregados · ordenadas por ${sortLabel(HEADERS, sort)}`}
         >
           {filtered.map((kw) => (
             <tr key={kw.id} className="transition-colors hover:bg-bg-soft">

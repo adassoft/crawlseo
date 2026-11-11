@@ -17,7 +17,7 @@ export function CsvExportButton({ siteId, type, label }: CsvExportButtonProps) {
       className={buttonVariants({ variant: "outline", size: "sm" })}
     >
       <Download className="size-3.5" aria-hidden />
-      {label ?? `Export ${type} CSV`}
+      {label ?? `Exportar ${type === "keywords" ? "palavras-chave" : "páginas"} em CSV`}
     </a>
   );
 }

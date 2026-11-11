@@ -38,7 +38,7 @@ function MetricCard({
           isFlat ? "text-muted-foreground" : delta > 0 ? "text-success" : "text-danger"
         )}
       >
-        {isFlat ? "No change" : deltaLabel}
+        {isFlat ? "Sem alteração" : deltaLabel}
       </p>
     </div>
   );
@@ -52,28 +52,28 @@ export async function DashboardMetrics({ siteId, days = 28 }: MetricsProps) {
   return (
     <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
       <MetricCard
-        label="Clicks"
+        label="Cliques"
         value={formatCompact(current.clicks)}
         delta={deltas.clicks}
         deltaLabel={`${signed(deltas.clicks)}%`}
       />
       <MetricCard
-        label="Impressions"
+        label="Impressões"
         value={formatCompact(current.impressions)}
         delta={deltas.impressions}
         deltaLabel={`${signed(deltas.impressions)}%`}
       />
       <MetricCard
-        label="Average position"
+        label="Posição média"
         value={current.avgPosition > 0 ? current.avgPosition.toFixed(1) : "n/a"}
         delta={deltas.avgPosition}
-        deltaLabel={`${signed(deltas.avgPosition)} places`}
+        deltaLabel={`${signed(deltas.avgPosition)} pos.`}
       />
       <MetricCard
-        label="CTR"
+        label="CTR Médio"
         value={formatCtr(current.avgCtr)}
         delta={ctrPoints}
-        deltaLabel={`${signed(ctrPoints)} pt`}
+        deltaLabel={`${signed(ctrPoints)} pts`}
       />
     </div>
   );

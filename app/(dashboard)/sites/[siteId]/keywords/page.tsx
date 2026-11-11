@@ -31,8 +31,8 @@ export default async function KeywordsPage({ params }: KeywordsPageProps) {
   return (
     <div>
       <PageHeader
-        title="Keywords"
-        description="Queries with impressions in the last 28 days, aggregated across days."
+        title="Palavras-chave"
+        description="Termos de busca com impressões nos últimos 28 dias agregados pelo Google Search Console."
         reserveStatus
         actions={
           <div className="flex flex-wrap items-center gap-2">
@@ -45,8 +45,8 @@ export default async function KeywordsPage({ params }: KeywordsPageProps) {
       {keywords.length === 0 ? (
         <EmptyState
           illustration="empty-keywords"
-          title="No keywords yet"
-          description="Sync Google Search Console to populate query-level performance."
+          title="Nenhuma palavra-chave ainda"
+          description="Sincronize com o Google Search Console para carregar os dados de consultas e posições."
         />
       ) : (
         <KeywordsTable keywords={keywords} />

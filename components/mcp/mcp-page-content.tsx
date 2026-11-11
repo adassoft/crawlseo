@@ -8,30 +8,30 @@ const TOOLS = [
   {
     category: "Sites",
     items: [
-      { name: "list_sites", description: "Your sites with their IDs and Search Console properties" },
-      { name: "get_site_overview", description: "28-day KPIs, the latest crawl and vitals" },
+      { name: "list_sites", description: "Seus sites com IDs e propriedades do Search Console" },
+      { name: "get_site_overview", description: "KPIs dos últimos 28 dias, auditoria recente e Web Vitals" },
     ],
   },
   {
-    category: "Keywords & Pages",
+    category: "Palavras-chave & Páginas",
     items: [
-      { name: "get_keywords", description: "Top queries, for the last N days or a date range" },
-      { name: "get_pages", description: "Top pages, for the last N days or a date range" },
-      { name: "get_traffic", description: "Daily clicks and impressions" },
+      { name: "get_keywords", description: "Principais termos de busca por período ou dias" },
+      { name: "get_pages", description: "Páginas mais acessadas por período ou dias" },
+      { name: "get_traffic", description: "Cliques e impressões diárias" },
     ],
   },
   {
-    category: "Crawl & Audit",
+    category: "Auditoria & Crawl",
     items: [
-      { name: "list_crawls", description: "The latest crawls with status and health score" },
-      { name: "get_crawl_issues", description: "Issues found by a crawl, by severity" },
+      { name: "list_crawls", description: "Auditorias recentes com status e nota de saúde técnica" },
+      { name: "get_crawl_issues", description: "Problemas identificados pelo crawl ordenados por gravidade" },
     ],
   },
   {
     category: "Performance & SEO",
     items: [
-      { name: "get_vitals", description: "Core Web Vitals reports (LCP, CLS, INP, TTFB)" },
-      { name: "get_opportunities", description: "Striking distance, low CTR, content decay, cannibalization" },
+      { name: "get_vitals", description: "Relatórios de Core Web Vitals (LCP, CLS, INP, TTFB)" },
+      { name: "get_opportunities", description: "Oportunidades de CTR baixo, posições 11-20 e canibalização" },
     ],
   },
 ];
@@ -54,12 +54,12 @@ function CopyButton({ text }: { text: string }) {
       {copied ? (
         <>
           <Check className="size-3 text-success" />
-          Copied
+          Copiado
         </>
       ) : (
         <>
           <Copy className="size-3" />
-          Copy
+          Copiar
         </>
       )}
     </button>
@@ -99,15 +99,15 @@ export function McpPageContent({
       <div className="panel p-5">
         <h3 className="flex items-center gap-2 text-[15px] leading-5 font-semibold text-text-strong">
           <KeyRound className="size-4" aria-hidden />
-          1. Turn on MCP and create a key
+          1. Ative o MCP e gere uma chave de API
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {enabled
-            ? "MCP is on for your account. Create a key in Settings > MCP; it is shown once."
-            : "MCP is off for your account, and every key is refused until you turn it on in Settings > MCP. Create a key there; it is shown once."}
+            ? "O acesso MCP & API está ativo na sua conta. Gere uma nova chave em Configurações > MCP & API; ela é exibida apenas uma vez."
+            : "O acesso MCP está inativo na sua conta. Ative em Configurações > MCP & API e gere uma chave para conectar integrações e agentes."}
         </p>
         <Link href="/settings#mcp" className="mt-3 inline-block text-sm font-medium text-link hover:underline">
-          Open Settings &gt; MCP
+          Abrir Configurações &gt; MCP
         </Link>
       </div>
 
@@ -115,22 +115,21 @@ export function McpPageContent({
         <div>
           <h3 className="flex items-center gap-2 text-[15px] leading-5 font-semibold text-text-strong">
             <Terminal className="size-4" aria-hidden />
-            2. Connect Claude Code
+            2. Conectar agentes de IA (Claude Code, Cursor, Antigravity)
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground">Run one of these with your key in place of &lt;key&gt;.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Execute um dos comandos abaixo substituindo &lt;key&gt; pela sua chave gerada.</p>
         </div>
-        <Command label="Over HTTP, to this instance's /mcp endpoint" command={http} />
-        <Command label="Over stdio, with the @crawlseo/mcp package" command={stdio} />
+        <Command label="Via HTTP, apontando para o endpoint /mcp desta instância:" command={http} />
+        <Command label="Via stdio, usando o pacote npm @crawlseo/mcp:" command={stdio} />
       </div>
 
       <div className="panel p-5">
         <h3 className="flex items-center gap-2 text-[15px] leading-5 font-semibold text-text-strong">
           <ShieldCheck className="size-4" aria-hidden />
-          Read-only tools
+          Ferramentas somente leitura (Read-only)
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          9 tools across 4 categories. They read your own sites&apos; data and nothing else: no tool changes anything or
-          starts a crawl or sync.
+          9 ferramentas distribuídas em 4 categorias. Elas consultam com segurança os dados dos seus sites sem risco de alteração ou comandos destrutivos.
         </p>
         <div className="mt-4 space-y-4">
           {TOOLS.map((group) => (

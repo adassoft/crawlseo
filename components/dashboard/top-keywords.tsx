@@ -16,23 +16,23 @@ export async function TopKeywords({ siteId, days = 28, limit = 10 }: TopKeywords
   return (
     <section className="panel overflow-hidden">
       <div className="flex items-baseline justify-between gap-3 px-4 pt-4 pb-1.5">
-        <h2 className="text-[15px] leading-5 font-semibold">Top queries</h2>
+        <h2 className="text-[15px] leading-5 font-semibold">Termos mais buscados</h2>
         <Link href={`/sites/${siteId}/keywords`} className="text-link text-[13px]">
-          All keywords
+          Todas as palavras-chave
         </Link>
       </div>
 
       {topKeywords.length === 0 ? (
         <div className="px-4 py-10 text-center text-[13px] text-muted-foreground">
-          No keyword data yet. Run a GSC sync.
+          Nenhum dado de palavra-chave ainda. Sincronize com o GSC.
         </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[520px] text-[13px]">
             <thead>
               <tr className="border-b border-border">
-                <th className={`${th} text-left`}>Query</th>
-                <th className={`${th} text-right`}>Clicks</th>
+                <th className={`${th} text-left`}>Termo</th>
+                <th className={`${th} text-right`}>Cliques</th>
                 <th className={`${th} text-right`}>Impr.</th>
                 <th className={`${th} text-right`}>CTR</th>
                 <th className={`${th} text-right`}>Pos.</th>

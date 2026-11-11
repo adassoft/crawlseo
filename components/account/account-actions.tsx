@@ -47,9 +47,9 @@ function SubmitButton({
 export function SignOutButton() {
   return (
     <form action={signOutAction}>
-      <SubmitButton variant="outline" pendingLabel="Signing out">
+      <SubmitButton variant="outline" pendingLabel="Saindo...">
         <LogOut className="size-4" aria-hidden />
-        Sign out
+        Sair
       </SubmitButton>
     </form>
   );
@@ -59,27 +59,26 @@ export function DisconnectGoogleDialog({ disabled = false }: { disabled?: boolea
   return (
     <Dialog>
       <DialogTrigger render={<Button size="sm" variant="outline" disabled={disabled} />}>
-        Disconnect
+        Desconectar
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Disconnect Google?</DialogTitle>
+          <DialogTitle>Desconectar o Google?</DialogTitle>
           <DialogDescription>
-            crawlseo asks Google to revoke its access, removes the stored Google tokens and signs
-            you out on every device. Search Console sync stops until you sign in again and grant
-            access.
+            O CrawlSEO solicitará ao Google a revogação de acesso, removerá os tokens salvos e
+            encerrará sua sessão em todos os dispositivos. A sincronização do Search Console será
+            pausada até que você faça login novamente e autorize o acesso.
           </DialogDescription>
         </DialogHeader>
         <p className="text-sm text-muted-foreground">
-          Your sites and their data stay. If Google cannot be reached, the tokens are still removed
-          here and you will be told so.
+          Seus sites e dados históricos permanecem intactos.
         </p>
 
         <form action={disconnectGoogleAction} className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
           <CancelButton />
-          <SubmitButton variant="destructive" pendingLabel="Disconnecting">
-            Disconnect
+          <SubmitButton variant="destructive" pendingLabel="Desconectando...">
+            Desconectar
           </SubmitButton>
         </form>
       </DialogContent>
@@ -104,29 +103,29 @@ export function DeleteAccountDialog({
     <Dialog onOpenChange={(open) => !open && setTyped("")}>
       <DialogTrigger render={<Button variant="destructive" />}>
         <Trash2 className="size-4" aria-hidden />
-        Delete account
+        Excluir conta
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete your account?</DialogTitle>
+          <DialogTitle>Excluir sua conta?</DialogTitle>
           <DialogDescription>
-            This deletes your account, every site and all its data (Search Console history, crawls,
-            vitals, alerts, saved keywords) and your API keys. Google access is revoked first. This
-            cannot be undone.
+            Isso excluirá permanentemente sua conta, todos os sites cadastrados e dados associados
+            (Search Console, auditorias de crawl, Core Web Vitals, alertas e palavras-chave salvas).
+            Esta ação não pode ser desfeita.
           </DialogDescription>
         </DialogHeader>
         {registrationClosed && (
           <p className="rounded-lg border border-warning/30 bg-warning-bg px-3 py-2 text-sm text-text-strong">
-            Registration is closed on this instance, so this Google account cannot sign up here
-            again.
+            Novos cadastros estão desativados nesta instância; esta conta do Google não poderá ser
+            cadastrada novamente aqui.
           </p>
         )}
 
         <form action={formAction} className="space-y-4">
           <div>
             <label htmlFor="confirm-email" className="mb-1 block text-xs font-medium text-muted-foreground">
-              Type <span className="font-data text-text-strong">{email}</span> to confirm
+              Digite <span className="font-data text-text-strong">{email}</span> para confirmar
             </label>
             <input
               id="confirm-email"
@@ -148,8 +147,8 @@ export function DeleteAccountDialog({
 
           <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
             <CancelButton />
-            <SubmitButton variant="destructive" pendingLabel="Deleting" disabled={!matches}>
-              Delete account
+            <SubmitButton variant="destructive" pendingLabel="Excluindo..." disabled={!matches}>
+              Excluir conta
             </SubmitButton>
           </div>
         </form>
@@ -163,7 +162,7 @@ function CancelButton() {
   const { pending } = useFormStatus();
   return (
     <DialogClose render={<Button type="button" variant="outline" disabled={pending} />}>
-      Cancel
+      Cancelar
     </DialogClose>
   );
 }

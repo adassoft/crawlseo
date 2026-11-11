@@ -30,15 +30,15 @@ export default async function VitalsPage({ params }: Props) {
     <div>
       <PageHeader
         title="Core Web Vitals"
-        description="PageSpeed Insights lab data for your top pages. Set GOOGLE_PAGESPEED_KEY for a higher quota."
+        description="Métricas de laboratório do PageSpeed Insights para suas principais páginas."
         actions={<VitalsButton siteId={siteId} />}
       />
 
       {reports.length === 0 ? (
         <EmptyState
           illustration="empty-vitals"
-          title="No vitals yet"
-          description="Run a check on your top landing pages (mobile Lighthouse)."
+          title="Nenhuma medição de vitals ainda"
+          description="Execute uma verificação nas suas principais páginas de destino (Lighthouse Mobile)."
         />
       ) : (
         <VitalsTable
@@ -56,9 +56,9 @@ export default async function VitalsPage({ params }: Props) {
       )}
 
       <div className="panel mt-6 p-5">
-        <h3 className="text-[15px] leading-5 font-semibold">Index coverage</h3>
+        <h3 className="text-[15px] leading-5 font-semibold">Cobertura de indexação</h3>
         <p className="mb-4 text-sm text-muted-foreground">
-          Live URL Inspection for top pages (uses your GSC OAuth token)
+          Inspeção ao vivo de URLs no Google Search Console (URL Inspection API)
         </p>
         <IndexCheckButton siteId={siteId} />
       </div>

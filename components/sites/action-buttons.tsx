@@ -24,8 +24,8 @@ const MIN_CUSTOM_PAGES = 1;
 /** The presets the ceiling allows, plus Custom. */
 function pageLimitItems(ceiling: number) {
   return [
-    ...PAGE_PRESETS.filter((n) => n <= ceiling).map((n) => ({ value: String(n), label: `${n} pages` })),
-    { value: "custom", label: "Custom" },
+    ...PAGE_PRESETS.filter((n) => n <= ceiling).map((n) => ({ value: String(n), label: `${n} páginas` })),
+    { value: "custom", label: "Personalizado" },
   ];
 }
 
@@ -99,7 +99,7 @@ export function CrawlButton({
       router.refresh();
     } catch (e) {
       setErr(true);
-      setMsg(e instanceof Error ? e.message : "Crawl failed");
+      setMsg(e instanceof Error ? e.message : "Falha na auditoria");
     } finally {
       setLoading(false);
     }
@@ -113,7 +113,7 @@ export function CrawlButton({
           onValueChange={(v) => v && setLimitSelection(v)}
           items={items}
         >
-          <SelectTrigger aria-label="Pages to crawl" className="h-[38px] bg-bg data-[size=default]:h-[38px]">
+          <SelectTrigger aria-label="Páginas para auditar" className="h-[38px] bg-bg data-[size=default]:h-[38px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -129,10 +129,10 @@ export function CrawlButton({
             type="number"
             min={MIN_CUSTOM_PAGES}
             max={pageCeiling}
-            placeholder="Pages"
+            placeholder="Páginas"
             value={customValue}
             onChange={(e) => setCustomValue(e.target.value.replace(/\D/g, ""))}
-            aria-label="Pages to crawl"
+            aria-label="Páginas para auditar"
             className="h-[38px] w-20 rounded-md border border-border bg-bg-section px-2 font-data text-[13px] text-text-strong outline-none focus:border-brand-500 focus:bg-bg"
           />
         )}
@@ -141,7 +141,7 @@ export function CrawlButton({
           disabled={loading || (isCustom && (!customValue || Number(customValue) < MIN_CUSTOM_PAGES))}
           onClick={run}
         >
-          {loading ? "Queueing…" : "Run crawl"}
+          {loading ? "Enfileirando…" : "Iniciar auditoria"}
         </Button>
       </div>
       {msg && !setHeaderStatus && (
@@ -171,7 +171,7 @@ export function VitalsStatusMessage({ status, onRetry }: { status: VitalsStatus;
         {status.text}{" "}
         {onRetry && (
           <button type="button" onClick={onRetry} className="text-link font-medium">
-            Retry
+            Tentar novamente
           </button>
         )}
       </p>
@@ -180,15 +180,15 @@ export function VitalsStatusMessage({ status, onRetry }: { status: VitalsStatus;
   if (status.kind === "quota") {
     return (
       <p role="alert" className="max-w-2xl text-atom-caption text-danger">
-        The PageSpeed Insights quota is exhausted. Add your own Google
-        PageSpeed key in{" "}
+        A cota do PageSpeed Insights esgotou. Adicione sua chave própria do Google
+        PageSpeed em{" "}
         <Link
           href="/settings?connect=google_pagespeed#connections"
           className="text-link font-medium"
         >
-          Settings → Connections
+          Configurações → Conexões
         </Link>{" "}
-        to keep checking vitals.
+        para continuar verificando vitals.
       </p>
     );
   }
@@ -217,7 +217,7 @@ export function VitalsButton({ siteId }: { siteId: string }) {
     try {
       const res = await fetch(`/api/sites/${siteId}/vitals`, { method: "POST" });
       const queued = await res.json();
-      if (!res.ok) throw new Error(queued.error || "Vitals failed");
+      if (!res.ok) throw new Error(queued.error || "Falha no teste de vitals");
       // The check runs as a job: wait for it, and say why when it waits or retries.
       const job = await waitForJob(queued.jobId, {
         onUpdate: (j) => {
@@ -227,19 +227,19 @@ export function VitalsButton({ siteId }: { siteId: string }) {
         },
       });
       if (job.waiting) {
-        setStatus({ kind: "waiting", text: pendingNote(job) ?? "Vitals failed, retry now." });
+        setStatus({ kind: "waiting", text: pendingNote(job) ?? "Falha no teste de vitals, tente novamente." });
         return;
       }
       if (job.errorCode === "QUOTA_EXCEEDED") {
         setStatus({ kind: "quota" });
         return;
       }
-      if (job.status === "FAILED") throw new Error(job.lastError || "Vitals failed");
+      if (job.status === "FAILED") throw new Error(job.lastError || "Falha no teste de vitals");
       const inserted = (job.result as { inserted?: number } | null)?.inserted ?? 0;
-      setStatus({ kind: "ok", text: `Saved ${inserted} PageSpeed reports` });
+      setStatus({ kind: "ok", text: `Salvos ${inserted} relatórios do PageSpeed` });
       router.refresh();
     } catch (e) {
-      setStatus({ kind: "error", text: e instanceof Error ? e.message : "Failed" });
+      setStatus({ kind: "error", text: e instanceof Error ? e.message : "Falha" });
     } finally {
       setLoading(false);
     }
@@ -258,7 +258,7 @@ export function VitalsButton({ siteId }: { siteId: string }) {
   return (
     <div className="space-y-1">
       <Button variant="outline" disabled={loading !== false} onClick={run}>
-        {loading === "queued" ? "Queued…" : loading ? "Checking…" : "Check vitals"}
+        {loading === "queued" ? "Na fila…" : loading ? "Verificando…" : "Testar Core Web Vitals"}
       </Button>
       {status && !setHeaderStatus && (
         <VitalsStatusMessage status={status} onRetry={() => void run()} />
@@ -287,14 +287,14 @@ export function IndexCheckButton({ siteId }: { siteId: string }) {
         setReauthRequired(true);
         return;
       }
-      if (!res.ok) throw new Error(data.error || "Failed");
+      if (!res.ok) throw new Error(data.error || "Falha");
       setResults(data.results || []);
     } catch (e) {
       setResults([
         {
           url: "n/a",
           ok: false,
-          error: e instanceof Error ? e.message : "Failed",
+          error: e instanceof Error ? e.message : "Falha",
         },
       ]);
     } finally {
@@ -310,19 +310,19 @@ export function IndexCheckButton({ siteId }: { siteId: string }) {
         disabled={loading}
         onClick={run}
       >
-        {loading ? "Inspecting…" : "Check index status"}
+        {loading ? "Inspecionando…" : "Verificar status de indexação"}
       </Button>
       {reauthRequired && (
         <div className="flex items-start gap-2 rounded-lg border border-warning/30 bg-warning-bg p-3">
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
           <div className="text-sm">
             <p className="text-muted-foreground">
-              Your Google connection expired.{" "}
+              Sua conexão com o Google expirou.{" "}
               <button
                 onClick={() => signIn("google")}
                 className="text-link font-medium"
               >
-                Reconnect &rarr;
+                Reconectar &rarr;
               </button>
             </p>
           </div>
@@ -337,7 +337,7 @@ export function IndexCheckButton({ siteId }: { siteId: string }) {
             >
               <p className="truncate font-data text-text-strong">{r.url}</p>
               <p className={r.ok === false ? "text-danger" : "text-success"}>
-                {r.error || r.coverageState || "Unknown"}
+                {r.error || r.coverageState || "Desconhecido"}
               </p>
             </div>
           ))}
@@ -354,13 +354,13 @@ export function ExportLinks({ siteId }: { siteId: string }) {
         href={`/api/sites/${siteId}/export?type=keywords`}
         className={buttonVariants({ variant: "outline", size: "sm" })}
       >
-        Export keywords CSV
+        Exportar palavras-chave (CSV)
       </a>
       <a
         href={`/api/sites/${siteId}/export?type=pages`}
         className={buttonVariants({ variant: "outline", size: "sm" })}
       >
-        Export pages CSV
+        Exportar páginas (CSV)
       </a>
     </div>
   );

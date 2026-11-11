@@ -24,17 +24,17 @@ import {
 type SortKey = "query" | "clicks" | "impressions" | "position" | "ctr";
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "clicks", label: "Clicks" },
-  { value: "impressions", label: "Impressions" },
-  { value: "position", label: "Position" },
+  { value: "clicks", label: "Cliques" },
+  { value: "impressions", label: "Impressões" },
+  { value: "position", label: "Posição" },
   { value: "ctr", label: "CTR" },
 ];
 
 const HEADERS: MetricHeader[] = [
-  { label: "Query", sortKey: "query", defaultDir: "asc" },
-  { label: "Position", align: "right", sortKey: "position", defaultDir: "asc" },
-  { label: "Clicks", align: "right", sortKey: "clicks" },
-  { label: "Impressions", align: "right", sortKey: "impressions" },
+  { label: "Palavra-chave", sortKey: "query", defaultDir: "asc" },
+  { label: "Posição", align: "right", sortKey: "position", defaultDir: "asc" },
+  { label: "Cliques", align: "right", sortKey: "clicks" },
+  { label: "Impressões", align: "right", sortKey: "impressions" },
   { label: "CTR", align: "right", sortKey: "ctr" },
 ];
 
@@ -103,12 +103,12 @@ export function KeywordsTable({ keywords }: { keywords: KeywordRow[] }) {
         <SearchField
           value={search}
           onChange={setSearch}
-          placeholder="Filter by query..."
+          placeholder="Filtrar por termo..."
         />
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Position
+            Posição
           </span>
           <select
             value={position}
@@ -125,7 +125,7 @@ export function KeywordsTable({ keywords }: { keywords: KeywordRow[] }) {
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Min clicks
+            Cliques mín.
           </span>
           <input
             type="number"
@@ -139,7 +139,7 @@ export function KeywordsTable({ keywords }: { keywords: KeywordRow[] }) {
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Min impressions
+            Impressões mín.
           </span>
           <input
             type="number"
@@ -153,7 +153,7 @@ export function KeywordsTable({ keywords }: { keywords: KeywordRow[] }) {
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Sort by
+            Ordenar por
           </span>
           <select
             value={sort.key}
@@ -177,16 +177,16 @@ export function KeywordsTable({ keywords }: { keywords: KeywordRow[] }) {
             onClick={clearFilters}
             className={buttonVariants({ variant: "ghost" })}
           >
-            Clear
+            Limpar
           </button>
         )}
       </div>
 
       {filtered.length === 0 ? (
         <div className="panel px-4 py-10 text-center">
-          <p className="font-medium text-text-strong">No keywords match</p>
+          <p className="font-medium text-text-strong">Nenhuma palavra-chave encontrada</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Loosen position, clicks, or impressions filters.
+            Ajuste os filtros de busca, posição, cliques ou impressões.
           </p>
         </div>
       ) : (
@@ -194,7 +194,7 @@ export function KeywordsTable({ keywords }: { keywords: KeywordRow[] }) {
           sort={sort}
           onSort={toggle}
           headers={HEADERS}
-          footer={`Showing ${filtered.length} of ${keywords.length} keywords · sorted by ${sortLabel(HEADERS, sort)}`}
+          footer={`Exibindo ${filtered.length} de ${keywords.length} palavras-chave · ordenadas por ${sortLabel(HEADERS, sort)}`}
         >
           {filtered.map((keyword) => (
             <tr

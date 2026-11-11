@@ -8,7 +8,7 @@ import { EvaluateAlertsButton } from "@/components/sites/evaluate-alerts-button"
 import { formatDay } from "@/lib/format";
 
 /** Names for types whose enum name does not read well. */
-const ALERT_LABELS: Record<string, string> = { NOINDEX_SITEWIDE: "most pages are noindex" };
+const ALERT_LABELS: Record<string, string> = { NOINDEX_SITEWIDE: "a maioria das páginas é noindex" };
 
 interface Props {
   params: Promise<{ siteId: string }>;
@@ -34,20 +34,20 @@ export default async function AlertsPage({ params }: Props) {
   return (
     <div>
       <PageHeader
-        title="Alerts"
+        title="Alertas"
         description={
           <>
-            Rules for traffic drops, position changes, crawl health, sites that are mostly noindex and vitals. They
-            are checked after each GSC or Bing sync, after each crawl and when you click Evaluate now. Fired alerts
-            show here and go to your{" "}
+            Regras para quedas de tráfego, oscilações de posição, nota de crawl e Core Web Vitals.
+            São avaliadas automaticamente após sincronizações e crawls ou sob demanda ao clicar em Avaliar agora.
+            Alertas disparados aparecem aqui e são encaminhados para seu{" "}
             <Link href="/settings#webhook" className="text-link">
-              alert webhook
+              webhook de alertas
             </Link>{" "}
-            and{" "}
+            e{" "}
             <Link href="/settings#email" className="text-link">
-              email
+              e-mail
             </Link>{" "}
-            if you set them up.
+            se configurados.
           </>
         }
         actions={<EvaluateAlertsButton />}
@@ -65,8 +65,8 @@ export default async function AlertsPage({ params }: Props) {
               </p>
               <p className="text-xs text-muted-foreground">
                 {a.lastFired
-                  ? `Last fired ${formatDay(a.lastFired, { year: true, time: true })}`
-                  : "Never fired"}
+                  ? `Último disparo em ${formatDay(a.lastFired, { year: true, time: true })}`
+                  : "Nunca disparado"}
               </p>
               <p className="mt-1 font-data text-[11px] text-muted-foreground">
                 {JSON.stringify(a.config)}
@@ -79,7 +79,7 @@ export default async function AlertsPage({ params }: Props) {
                   : "mono-label rounded-md border border-border px-2 py-0.5 text-[11px] text-muted-foreground"
               }
             >
-              {a.enabled ? "Enabled" : "Off"}
+              {a.enabled ? "Ativo" : "Inativo"}
             </span>
           </div>
         ))}

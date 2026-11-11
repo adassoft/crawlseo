@@ -51,7 +51,7 @@ export function workspaceItems(
 ): WorkspaceItem[] {
   const active = activeSiteId(pathname, sites);
   return [
-    { kind: "all", label: "All sites", href: ALL_SITES_HREF, current: active === null },
+    { kind: "all", label: "Todos os sites", href: ALL_SITES_HREF, current: active === null },
     ...sites.map((s) => ({
       kind: "site" as const,
       id: s.id,
@@ -59,6 +59,6 @@ export function workspaceItems(
       href: sitePathFor(pathname, s.id, extraSubPages),
       current: s.id === active,
     })),
-    { kind: "add", label: "Add site" },
+    { kind: "add", label: "Adicionar site" },
   ];
 }

@@ -75,8 +75,8 @@ export default async function SiteOverviewPage({ params }: SitePageProps) {
   return (
     <div>
       <PageHeader
-        title="Overview"
-        meta="Last 28 days vs the previous 28 days"
+        title="Visão Geral"
+        meta="Últimos 28 dias vs os 28 dias anteriores"
         description={<span className="font-data">{site.gscProperty || site.domain}</span>}
         reserveStatus
         actions={
@@ -97,8 +97,8 @@ export default async function SiteOverviewPage({ params }: SitePageProps) {
       {!hasData ? (
         <EmptyState
           illustration="empty-gsc-wait"
-          title="Waiting for GSC data"
-          description="Run a sync to pull keywords, pages, and traffic for the last 28 days."
+          title="Aguardando dados do GSC"
+          description="Execute uma sincronização para buscar palavras-chave, páginas e dados de tráfego dos últimos 28 dias."
         />
       ) : (
         <div className="flex flex-col gap-[22px]">
@@ -109,12 +109,12 @@ export default async function SiteOverviewPage({ params }: SitePageProps) {
             <TopKeywords siteId={siteId} />
 
             <section className="panel flex flex-col gap-3 self-start px-5 py-[18px]">
-              <h2 className="text-[15px] leading-5 font-semibold">Site checks</h2>
+              <h2 className="text-[15px] leading-5 font-semibold">Diagnóstico do site</h2>
               <CheckRow
-                label="Crawl health"
+                label="Saúde técnica"
                 value={
                   noindexWarning
-                    ? "Most pages noindex"
+                    ? "Maioria noindex"
                     : latestCrawl?.healthScore != null
                       ? `${latestCrawl.healthScore}/100`
                       : "n/a"
@@ -122,32 +122,32 @@ export default async function SiteOverviewPage({ params }: SitePageProps) {
                 tone={noindexWarning ? "warning" : undefined}
               />
               <CheckRow
-                label="Crawl"
+                label="Auditoria (Crawl)"
                 value={
                   latestCrawl
-                    ? `${latestPageCount} pages · ${latestIssueCount} issues`
-                    : "Not run yet"
+                    ? `${latestPageCount} páginas · ${latestIssueCount} problemas`
+                    : "Não executada"
                 }
               />
               {crawlActivity.active && (
-                <CheckRow label="Last crawl" value={crawlActivity.active.status === "QUEUED" ? "Queued" : "Running"} />
+                <CheckRow label="Último crawl" value={crawlActivity.active.status === "QUEUED" ? "Na fila" : "Em execução"} />
               )}
               {crawlActivity.failed && (
                 <div className="flex flex-col gap-0.5">
-                  <CheckRow label="Last crawl" value="Failed" tone="danger" />
+                  <CheckRow label="Último crawl" value="Falhou" tone="danger" />
                   <p className="text-[12px] leading-4 text-muted-foreground">
-                    {crawlActivity.failed.error ?? "No reason was recorded."}
+                    {crawlActivity.failed.error ?? "Nenhum motivo detalhado registrado."}
                   </p>
                 </div>
               )}
-              <CheckRow label="Opportunities" value={String(opportunities?.feed.length ?? 0)} />
+              <CheckRow label="Oportunidades" value={String(opportunities?.feed.length ?? 0)} />
               <CheckRow
-                label="Latest perf score"
+                label="Performance (Vitals)"
                 value={latestVital?.perfScore != null ? String(latestVital.perfScore) : "n/a"}
               />
               {latestVital?.url && (
                 <div className="flex items-baseline justify-between gap-3 text-[13px] leading-5">
-                  <span className="shrink-0 text-text">Tested URL</span>
+                  <span className="shrink-0 text-text">URL testada</span>
                   <span className="truncate font-data text-[12px] text-text-strong" title={latestVital.url}>
                     {latestVital.url.replace(/^https?:\/\//, "")}
                   </span>
@@ -155,13 +155,13 @@ export default async function SiteOverviewPage({ params }: SitePageProps) {
               )}
               <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[13px]">
                 <Link href={`/sites/${siteId}/crawl`} className="text-link">
-                  Crawl / Audit
+                  Auditoria (Crawl)
                 </Link>
                 <Link href={`/sites/${siteId}/opportunities`} className="text-link">
-                  Opportunities
+                  Oportunidades
                 </Link>
                 <Link href={`/sites/${siteId}/vitals`} className="text-link">
-                  Vitals
+                  Core Web Vitals
                 </Link>
               </div>
             </section>

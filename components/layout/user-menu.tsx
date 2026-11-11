@@ -32,14 +32,14 @@ export function UserMenu({
   update?: AvailableUpdate | null;
   collapsed?: boolean;
 }) {
-  const label = name?.trim() || email || "Account";
+  const label = name?.trim() || email || "Conta";
   const [signingOut, startSignOut] = useTransition();
 
   return (
     <div className={cn("flex flex-col gap-1.5", collapsed ? "items-center" : "px-0.5")}>
       <Menu.Root>
         <Menu.Trigger
-          aria-label={collapsed ? `${label}: account menu` : undefined}
+          aria-label={collapsed ? `${label}: menu da conta` : undefined}
           title={collapsed ? label : undefined}
           className={cn(
             "flex items-center rounded-md text-left transition-colors outline-none hover:bg-bg-section focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-popup-open:bg-bg-section",
@@ -66,7 +66,7 @@ export function UserMenu({
               )}
               <Menu.LinkItem render={<Link href="/settings" />} closeOnClick className={ITEM_CLASS}>
                 <Settings className="size-4 text-muted-foreground" aria-hidden />
-                Settings
+                Configurações
               </Menu.LinkItem>
               <Menu.Item
                 className={ITEM_CLASS}
@@ -79,14 +79,14 @@ export function UserMenu({
                 ) : (
                   <LogOut className="size-4 text-muted-foreground" aria-hidden />
                 )}
-                Sign out
+                Sair
               </Menu.Item>
             </Menu.Popup>
           </Menu.Positioner>
         </Menu.Portal>
       </Menu.Root>
       <div className={cn("flex flex-wrap items-baseline gap-x-2", !collapsed && "px-2")}>
-        <span className="font-data text-[11px] leading-4 text-muted-foreground" title="crawlseo version">
+        <span className="font-data text-[11px] leading-4 text-muted-foreground" title="Versão do CrawlSEO">
           v{version}
         </span>
         {update && !collapsed && (
@@ -96,8 +96,8 @@ export function UserMenu({
             rel="noopener noreferrer"
             className="text-[11px] leading-4 font-medium text-text-strong underline underline-offset-2 hover:text-primary"
           >
-            {`Update available: v${update.version}`}
-            <span className="sr-only"> (opens in a new tab)</span>
+            {`Atualização disponível: v${update.version}`}
+            <span className="sr-only"> (abre em nova aba)</span>
           </a>
         )}
       </div>

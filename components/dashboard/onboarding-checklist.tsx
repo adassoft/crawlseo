@@ -51,39 +51,39 @@ export function OnboardingChecklist({
   const steps: Step[] = [
     {
       id: "add-site",
-      label: "Add a site",
-      description: "Connect a Google Search Console property to monitor",
+      label: "Adicionar um site",
+      description: "Conecte uma propriedade do Google Search Console para monitorar",
       icon: <Globe className="size-4" />,
       done: hasSites,
       href: "/sites",
-      actionLabel: "Add site",
+      actionLabel: "Adicionar site",
     },
     {
       id: "connect-gsc",
-      label: "Connect GSC",
-      description: "Link your Google Search Console for keyword and page data",
+      label: "Conectar GSC",
+      description: "Vincule seu Google Search Console para dados de buscas e páginas",
       icon: <Link2 className="size-4" />,
       done: hasGscConnected,
       href: firstSiteId ? `/sites/${firstSiteId}` : "/sites",
-      actionLabel: "Connect",
+      actionLabel: "Conectar",
     },
     {
       id: "first-sync",
-      label: "Sync GSC data",
-      description: "Pull the last 28 days of search performance data",
+      label: "Sincronizar dados do GSC",
+      description: "Puxar os últimos 28 dias de métricas de desempenho de pesquisa",
       icon: <RefreshCw className="size-4" />,
       done: hasSyncedData,
       href: firstSiteId ? `/sites/${firstSiteId}` : "/sites",
-      actionLabel: "Sync now",
+      actionLabel: "Sincronizar agora",
     },
     {
       id: "first-crawl",
-      label: "Run first crawl",
-      description: "Audit your site for technical SEO issues",
+      label: "Executar 1ª auditoria",
+      description: "Auditar seu site procurando erros técnicos de SEO",
       icon: <Bug className="size-4" />,
       done: hasCrawled,
       href: firstSiteId ? `/sites/${firstSiteId}/crawl` : "/sites",
-      actionLabel: "Start crawl",
+      actionLabel: "Iniciar auditoria",
     },
   ];
 
@@ -95,17 +95,17 @@ export function OnboardingChecklist({
       <div className="flex items-start justify-between px-5 pt-5">
         <div>
           <h2 className="text-[15px] leading-5 font-semibold">
-            Get started
+            Primeiros passos
           </h2>
           <p className="mono-label mt-1 text-[11px] text-muted-foreground">
-            {completedCount}/{steps.length} steps completed
+            {completedCount}/{steps.length} etapas concluídas
           </p>
         </div>
         <button
           type="button"
           onClick={() => setDismissed(true)}
           className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-bg-section hover:text-text-strong"
-          aria-label="Dismiss"
+          aria-label="Dispensar"
         >
           <X className="size-4" />
         </button>

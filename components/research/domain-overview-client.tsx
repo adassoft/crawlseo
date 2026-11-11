@@ -100,17 +100,17 @@ export function DomainOverviewClient({
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
           <div className="text-sm">
             <p className="font-medium text-text-strong">
-              Limited data: GSC metrics only
+              Dados limitados: apenas métricas do GSC
             </p>
             <p className="mt-0.5 text-muted-foreground">
-              Add a DataForSEO API key in{" "}
+              Adicione uma chave do DataForSEO em{" "}
               <Link
                 href="/settings?connect=dataforseo#connections"
                 className="text-link"
               >
-                Settings
+                Configurações
               </Link>{" "}
-              for full domain analysis and competitor comparison.
+              para análise completa de domínio e comparação de concorrentes.
             </p>
           </div>
         </div>
@@ -129,7 +129,7 @@ export function DomainOverviewClient({
           ) : (
             <Globe className="size-4" />
           )}
-          Analyze {domain}
+          Analisar {domain}
         </button>
 
         {hasDataForSEO && (
@@ -140,7 +140,7 @@ export function DomainOverviewClient({
                 type="text"
                 value={competitorDomain}
                 onChange={(e) => setCompetitorDomain(e.target.value)}
-                placeholder="Enter competitor domain..."
+                placeholder="Digite o domínio concorrente..."
                 className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-brand-500 focus:bg-bg focus:outline-none"
               />
             </div>
@@ -154,7 +154,7 @@ export function DomainOverviewClient({
               ) : (
                 <Search className="size-4" />
               )}
-              Compare
+              Comparar
             </button>
           </form>
         )}
@@ -167,10 +167,10 @@ export function DomainOverviewClient({
       {(ownData || competitorData) && (
         <div className="grid gap-4 sm:grid-cols-2">
           {ownData && (
-            <DomainCard data={ownData} label="Your domain" />
+            <DomainCard data={ownData} label="Seu domínio" />
           )}
           {competitorData && (
-            <DomainCard data={competitorData} label="Competitor" />
+            <DomainCard data={competitorData} label="Concorrente" />
           )}
         </div>
       )}
@@ -198,16 +198,16 @@ function DomainCard({ data, label }: { data: DomainData; label: string }) {
       {data.overview ? (
         <div className="grid grid-cols-2 gap-3">
           <MetricCard
-            label="Organic keywords"
+            label="Palavras orgânicas"
             value={data.overview.organicKeywords.toLocaleString()}
           />
           <MetricCard
-            label="Organic traffic"
+            label="Tráfego orgânico"
             value={data.overview.organicTraffic.toLocaleString()}
           />
           {data.overview.organicCost != null && (
             <MetricCard
-              label="Traffic cost"
+              label="Custo do tráfego"
               value={`$${data.overview.organicCost.toLocaleString()}`}
             />
           )}
@@ -219,7 +219,7 @@ function DomainCard({ data, label }: { data: DomainData; label: string }) {
           )}
           {data.overview.referringDomains != null && (
             <MetricCard
-              label="Referring domains"
+              label="Domínios de referência"
               value={data.overview.referringDomains.toLocaleString()}
             />
           )}
@@ -228,7 +228,7 @@ function DomainCard({ data, label }: { data: DomainData; label: string }) {
         <div className="flex flex-col items-center py-8 text-center">
           <Globe className="size-8 text-text-faint" />
           <p className="mt-2 text-sm text-muted-foreground">
-            No data available for this domain
+            Nenhum dado disponível para este domínio
           </p>
         </div>
       )}
@@ -236,15 +236,15 @@ function DomainCard({ data, label }: { data: DomainData; label: string }) {
       {data.backlinks && (
         <div className="mt-4 border-t border-border pt-4">
           <p className="mb-2 mono-label text-[12px] text-muted-foreground">
-            Backlink Summary
+            Resumo de Backlinks
           </p>
           <div className="grid grid-cols-2 gap-3">
             <MetricCard
-              label="Total backlinks"
+              label="Total de backlinks"
               value={data.backlinks.totalBacklinks.toLocaleString()}
             />
             <MetricCard
-              label="Referring domains"
+              label="Domínios de referência"
               value={data.backlinks.referringDomains.toLocaleString()}
             />
             <MetricCard
@@ -277,5 +277,5 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 
 /** The source badge: "none" means no provider had data for the domain. */
 export function sourceLabel(source: string): string {
-  return source === "none" ? "UNAVAILABLE" : source.toUpperCase();
+  return source === "none" ? "INDISPONÍVEL" : source.toUpperCase();
 }

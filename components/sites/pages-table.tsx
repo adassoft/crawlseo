@@ -20,9 +20,9 @@ import {
 
 const HEADERS: MetricHeader[] = [
   { label: "URL", sortKey: "url", defaultDir: "asc" },
-  { label: "Position", align: "right", sortKey: "position", defaultDir: "asc" },
-  { label: "Clicks", align: "right", sortKey: "clicks" },
-  { label: "Impressions", align: "right", sortKey: "impressions" },
+  { label: "Posição", align: "right", sortKey: "position", defaultDir: "asc" },
+  { label: "Cliques", align: "right", sortKey: "clicks" },
+  { label: "Impressões", align: "right", sortKey: "impressions" },
   { label: "CTR", align: "right", sortKey: "ctr" },
 ];
 
@@ -65,11 +65,11 @@ export function PagesTable({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-end gap-3">
-        <SearchField value={search} onChange={setSearch} placeholder="Filter by URL..." />
+        <SearchField value={search} onChange={setSearch} placeholder="Filtrar por URL..." />
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Position
+            Posição
           </span>
           <select
             value={position}
@@ -86,7 +86,7 @@ export function PagesTable({
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Min clicks
+            Cliques mín.
           </span>
           <input
             type="number"
@@ -100,7 +100,7 @@ export function PagesTable({
 
         <label className="flex flex-col gap-1">
           <span className="mono-label text-[11px] text-muted-foreground">
-            Min impressions
+            Impressões mín.
           </span>
           <input
             type="number"
@@ -115,9 +115,9 @@ export function PagesTable({
 
       {filtered.length === 0 ? (
         <div className="panel px-4 py-10 text-center">
-          <p className="font-medium text-text-strong">No pages match</p>
+          <p className="font-medium text-text-strong">Nenhuma página encontrada</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Loosen the search or filters.
+            Ajuste a busca ou os filtros de visualização.
           </p>
         </div>
       ) : (
@@ -125,7 +125,7 @@ export function PagesTable({
           sort={sort}
           onSort={toggle}
           headers={HEADERS}
-          footer={`Showing ${filtered.length} of ${rows.length} pages · sorted by ${sortLabel(HEADERS, sort)}`}
+          footer={`Exibindo ${filtered.length} de ${rows.length} páginas · ordenadas por ${sortLabel(HEADERS, sort)}`}
         >
           {filtered.map((page) => {
             const href = page.url.startsWith("http")

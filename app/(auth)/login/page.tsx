@@ -12,19 +12,19 @@ function errorMessage(error: string | string[] | undefined): string | null {
   if (error === "AccessDenied") {
     return registrationClosedMessage();
   }
-  return "Sign-in failed. Please try again.";
+  return "Falha ao entrar. Por favor, tente novamente.";
 }
 
 // Set by the account actions (app/(dashboard)/settings/actions.ts) after they sign the user out.
 const UNREVOKED =
-  " Google did not confirm the revoke: to be sure, remove crawlseo at myaccount.google.com/permissions.";
+  " O Google não confirmou a revogação: por garantia, remova o crawlseo em myaccount.google.com/permissions.";
 const NOTICES: Record<string, string> = {
-  disconnected: "Google is disconnected and you are signed out. Sign in again to reconnect Search Console.",
+  disconnected: "O Google foi desconectado e você saiu da sessão. Entre novamente para reconectar o Search Console.",
   "disconnected-unrevoked":
-    "You are signed out and the Google tokens were removed from this server." + UNREVOKED,
-  deleted: "Your account and all its data were deleted.",
-  "deleted-unrevoked": "Your account and all its data were deleted." + UNREVOKED,
-  "delete-failed": "Your account could not be deleted. Sign in and try again.",
+    "Você saiu da sessão e os tokens do Google foram removidos deste servidor." + UNREVOKED,
+  deleted: "Sua conta e todos os dados associados foram excluídos.",
+  "deleted-unrevoked": "Sua conta e todos os dados foram excluídos." + UNREVOKED,
+  "delete-failed": "Não foi possível excluir sua conta. Faça login e tente novamente.",
 };
 
 function noticeMessage(notice: string | string[] | undefined): string | null {
@@ -51,13 +51,13 @@ export default async function LoginPage({
           <h1 className="text-text-strong">
             <Logo className="h-8" />
           </h1>
-          <p className="text-atom-body text-muted-foreground">Self-hosted search ops for founders</p>
+          <p className="text-atom-body text-muted-foreground">Monitoramento e SEO self-hosted</p>
         </div>
 
         <div className="panel p-8">
-          <h2 className="text-atom-title font-medium">Sign in</h2>
+          <h2 className="text-atom-title font-medium">Entrar</h2>
           <p className="mt-2 text-atom-body text-muted-foreground">
-            Connect Google Search Console with read-only access.
+            Conecte o Google Search Console com acesso somente leitura.
           </p>
 
           {notice && (
@@ -80,14 +80,14 @@ export default async function LoginPage({
             }}
           >
             <Button type="submit" size="lg" className="w-full">
-              Continue with Google
+              Continuar com o Google
             </Button>
           </form>
 
           <ul className="mt-6 space-y-1.5 border-t border-border pt-5 text-[13px] leading-5 text-muted-foreground">
-            <li>Keywords, positions and CTR from GSC</li>
-            <li>Technical crawl and Core Web Vitals</li>
-            <li>Data stays on your server</li>
+            <li>Palavras-chave, posições e CTR direto do GSC</li>
+            <li>Auditoria técnica (Crawl) e Core Web Vitals</li>
+            <li>Seus dados permanecem no seu servidor</li>
           </ul>
         </div>
       </div>

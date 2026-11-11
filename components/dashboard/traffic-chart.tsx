@@ -78,7 +78,7 @@ export function TrafficChart({ siteId, days = 90 }: TrafficChartProps) {
   if (loading) {
     return (
       <div className="panel flex h-[262px] items-center justify-center">
-        <p className="text-atom-body text-muted-foreground">Loading traffic…</p>
+        <p className="text-atom-body text-muted-foreground">Carregando tráfego…</p>
       </div>
     );
   }
@@ -94,9 +94,9 @@ export function TrafficChart({ siteId, days = 90 }: TrafficChartProps) {
   if (series.length === 0) {
     return (
       <div className="panel flex h-[262px] flex-col items-center justify-center gap-2">
-        <p className="text-atom-subheader font-medium text-text-strong">No traffic yet</p>
+        <p className="text-atom-subheader font-medium text-text-strong">Nenhum tráfego ainda</p>
         <p className="text-atom-body text-muted-foreground">
-          Sync GSC data to populate the last {days} days.
+          Sincronize dados do GSC para preencher os últimos {days} dias.
         </p>
       </div>
     );
@@ -108,22 +108,22 @@ export function TrafficChart({ siteId, days = 90 }: TrafficChartProps) {
   return (
     <section className="panel flex flex-col gap-4 px-[22px] py-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-[15px] leading-5 font-semibold">Clicks per day</h2>
+        <h2 className="text-[15px] leading-5 font-semibold">Cliques por dia</h2>
         <div className="flex flex-wrap gap-[18px] text-[12px] leading-4 text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <span aria-hidden className="size-2.5 rounded-[2px] bg-chart-1" />
-            Synced
+            Sincronizado
           </span>
           <span className="flex items-center gap-1.5">
             <span aria-hidden className="size-2.5 rounded-[2px] border border-dashed border-text-soft" />
-            Not in GSC yet, not a zero
+            Ainda não consolidado pelo GSC
           </span>
         </div>
       </div>
 
       <div
         role="img"
-        aria-label={`Clicks per day, ${formatDay(series[0].date)} to ${formatDay(series[series.length - 1].date)}. Highest day ${max.toLocaleString()} clicks. ${missing} days not reported by Search Console yet.`}
+        aria-label={`Cliques por dia, ${formatDay(series[0].date)} até ${formatDay(series[series.length - 1].date)}. Maior dia com ${max.toLocaleString()} cliques. ${missing} dias ainda não reportados pelo Search Console.`}
         className="flex h-[170px] items-end gap-[3px] border-b border-border sm:gap-1.5"
         onMouseLeave={() => setHover(null)}
       >
@@ -153,8 +153,8 @@ export function TrafficChart({ siteId, days = 90 }: TrafficChartProps) {
           <span className="mono-label">
             {formatDay(shown.date)} ·{" "}
             {shown.clicks === null
-              ? "not in GSC yet"
-              : `${shown.clicks.toLocaleString()} clicks · ${shown.impressions?.toLocaleString()} impressions`}
+              ? "ainda não no GSC"
+              : `${shown.clicks.toLocaleString()} cliques · ${shown.impressions?.toLocaleString()} impressões`}
           </span>
         ) : (
           ticks.map((i) => (

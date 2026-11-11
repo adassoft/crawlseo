@@ -26,14 +26,14 @@ export default async function OpportunitiesPage({ params }: Props) {
     return (
       <div>
         <PageHeader
-          title="Opportunities"
-          description="Quick wins from your GSC data."
+          title="Oportunidades"
+          description="Ganhos rápidos calculados a partir dos dados do Search Console."
         />
         <EmptyState
           illustration="empty-gsc-wait"
-          title="Sync GSC first"
-          description="Opportunities are computed from keyword and page performance."
-          actionLabel="Back to overview"
+          title="Sincronize o GSC primeiro"
+          description="As oportunidades são calculadas com base no histórico de cliques e posições das páginas e termos."
+          actionLabel="Voltar à visão geral"
           actionHref={`/sites/${siteId}`}
         />
       </div>
@@ -45,8 +45,8 @@ export default async function OpportunitiesPage({ params }: Props) {
   return (
     <div>
       <PageHeader
-        title="Opportunities"
-        description="Striking distance, low CTR, content decay and keyword cannibalization."
+        title="Oportunidades"
+        description="Termos próximos da 1ª página, CTR baixo, decaimento de páginas e canibalização de termos."
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <CsvExportButton siteId={siteId} type="keywords" />
@@ -56,15 +56,15 @@ export default async function OpportunitiesPage({ params }: Props) {
       />
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Mini label="Striking distance" value={data.summary.strikingDistance} />
-        <Mini label="Low CTR" value={data.summary.lowCtr} />
-        <Mini label="Content decay" value={data.summary.contentDecay} />
-        <Mini label="Cannibalization" value={data.summary.cannibalization} />
+        <Mini label="Quase no topo" value={data.summary.strikingDistance} />
+        <Mini label="CTR abaixo do esperado" value={data.summary.lowCtr} />
+        <Mini label="Decaimento de tráfego" value={data.summary.contentDecay} />
+        <Mini label="Canibalização" value={data.summary.cannibalization} />
       </div>
 
       {data.feed.length > 0 && (
         <div className="panel mb-6 p-5">
-          <h2 className="text-[15px] leading-5 font-semibold">Priority feed</h2>
+          <h2 className="text-[15px] leading-5 font-semibold">Feed de prioridades</h2>
           <ul className="mt-4 space-y-3">
             {data.feed.map((item, i) => (
               <li
@@ -82,7 +82,7 @@ export default async function OpportunitiesPage({ params }: Props) {
                         item.severity === "low" && "border-border text-text"
                       )}
                     >
-                      {item.severity}
+                      {item.severity === "high" ? "alta" : item.severity === "medium" ? "média" : "baixa"}
                     </span>
                   </div>
                   <p className="mt-1 font-medium text-text-strong break-all">{item.title}</p>
@@ -95,17 +95,17 @@ export default async function OpportunitiesPage({ params }: Props) {
       )}
 
       <div className="space-y-6">
-        <Section title="Striking distance (pos 4–20)">
+        <Section title="Quase no topo (posições 4 a 20)">
           {data.striking.length === 0 ? (
-            <p className="text-sm text-muted-foreground">None right now</p>
+            <p className="text-sm text-muted-foreground">Nenhuma oportunidade detectada no momento</p>
           ) : (
             <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="mono-label text-[11px] text-muted-foreground">
-                  <th className="py-2 text-left">Query</th>
-                  <th className="py-2 text-right">Pos</th>
+                  <th className="py-2 text-left">Termo</th>
+                  <th className="py-2 text-right">Pos.</th>
                   <th className="py-2 text-right">Impr.</th>
-                  <th className="py-2 text-right">Clicks</th>
+                  <th className="py-2 text-right">Cliques</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-soft">
@@ -128,17 +128,17 @@ export default async function OpportunitiesPage({ params }: Props) {
           )}
         </Section>
 
-        <Section title="Low CTR vs expected">
+        <Section title="CTR abaixo do esperado para a posição">
           {data.lowCtr.length === 0 ? (
-            <p className="text-sm text-muted-foreground">None right now</p>
+            <p className="text-sm text-muted-foreground">Nenhum termo com CTR anômalo no momento</p>
           ) : (
             <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="mono-label text-[11px] text-muted-foreground">
-                  <th className="py-2 text-left">Query</th>
-                  <th className="py-2 text-right">Pos</th>
+                  <th className="py-2 text-left">Termo</th>
+                  <th className="py-2 text-right">Pos.</th>
                   <th className="py-2 text-right">CTR</th>
-                  <th className="py-2 text-right">Expected</th>
+                  <th className="py-2 text-right">Esperado</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-soft">
@@ -161,9 +161,9 @@ export default async function OpportunitiesPage({ params }: Props) {
           )}
         </Section>
 
-        <Section title="Content decay (pages −25%+ clicks)">
+        <Section title="Decaimento de conteúdo (páginas com queda de 25%+ em cliques)">
           {data.decay.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No decaying pages</p>
+            <p className="text-sm text-muted-foreground">Nenhuma página em decaimento recente</p>
           ) : (
             <ul className="space-y-2">
               {data.decay.map((p) => (
@@ -178,9 +178,9 @@ export default async function OpportunitiesPage({ params }: Props) {
           )}
         </Section>
 
-        <Section title="Keyword cannibalization">
+        <Section title="Canibalização de palavras-chave (múltiplas URLs competindo)">
           {data.cannibal.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No multi-URL queries detected</p>
+            <p className="text-sm text-muted-foreground">Nenhum termo competindo entre múltiplas páginas</p>
           ) : (
             <ul className="space-y-4">
               {data.cannibal.map((c) => (
@@ -234,10 +234,10 @@ function Section({
 
 function TypeBadge({ type }: { type: string }) {
   const labels: Record<string, string> = {
-    striking_distance: "Striking",
-    low_ctr: "Low CTR",
-    content_decay: "Decay",
-    cannibalization: "Cannibal",
+    striking_distance: "Quase no topo",
+    low_ctr: "CTR Baixo",
+    content_decay: "Decaimento",
+    cannibalization: "Canibalização",
   };
   return (
     <span className="mono-label rounded-md border border-border bg-bg-section px-2 py-0.5 text-[11px] text-text-strong">

@@ -19,15 +19,15 @@ export function EvaluateAlertsButton() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
       const n = data.fires?.length ?? 0;
-      const channels = [data.webhookDeliveries > 0 && "your webhook", data.emailDeliveries > 0 && "email"].filter(Boolean);
-      const sent = channels.length ? ` Queued for ${channels.join(" and ")}.` : "";
+      const channels = [data.webhookDeliveries > 0 && "webhook", data.emailDeliveries > 0 && "e-mail"].filter(Boolean);
+      const sent = channels.length ? ` Enfileirado para ${channels.join(" e ")}.` : "";
       setMsg(
         n === 0
-          ? "No alerts fired"
-          : `${n} alert(s): ${data.fires.map((f: { message: string }) => f.message).join(" · ")}.${sent}`
+          ? "Nenhum alerta disparado"
+          : `${n} alerta(s): ${data.fires.map((f: { message: string }) => f.message).join(" · ")}.${sent}`
       );
     } catch (e) {
-      setMsg(e instanceof Error ? e.message : "Failed");
+      setMsg(e instanceof Error ? e.message : "Falhou");
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ export function EvaluateAlertsButton() {
   return (
     <div className="space-y-1 text-right">
       <Button size="sm" variant="outline" disabled={loading} onClick={run}>
-        {loading ? "Checking…" : "Evaluate now"}
+        {loading ? "Verificando…" : "Avaliar agora"}
       </Button>
       {msg && (
         <p className="max-w-sm text-xs text-muted-foreground sm:ml-auto">{msg}</p>

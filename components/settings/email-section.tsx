@@ -18,17 +18,17 @@ export function lastEmailLine(e: LastEmail): { ok: boolean; text: string } {
   const at = formatDay(e.at, { year: true, time: true });
   switch (e.status) {
     case "sent":
-      return { ok: true, text: `Last email: sent, ${at}.` };
+      return { ok: true, text: `Último e-mail: enviado com sucesso, em ${at}.` };
     case "queued":
     case "running":
-      return { ok: true, text: "Last email: sending now." };
+      return { ok: true, text: "Último e-mail: enviando agora." };
     case "retrying":
       return {
         ok: false,
-        text: `Last email: attempt ${e.attempts} failed${e.error ? `: ${e.error}` : "."} Next attempt ${formatDay(e.nextAttemptAt ?? e.at, { time: true })}.`,
+        text: `Último e-mail: tentativa ${e.attempts} falhou${e.error ? `: ${e.error}` : "."} Próxima tentativa em ${formatDay(e.nextAttemptAt ?? e.at, { time: true })}.`,
       };
     case "failed":
-      return { ok: false, text: `Last email failed after ${e.attempts} attempt(s), ${at}${e.error ? `: ${e.error}` : "."}` };
+      return { ok: false, text: `Último e-mail falhou após ${e.attempts} tentativa(s), em ${at}${e.error ? `: ${e.error}` : "."}` };
   }
 }
 
@@ -48,7 +48,7 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
   if (!status.enabled) {
     return (
       <div className="panel p-5 text-[13px] leading-5 text-text">
-        Alert emails are turned off on this server (<code className="font-data">ALERT_EMAILS_ENABLED=false</code>).
+        E-mails de alerta estão desativados neste servidor (<code className="font-data">ALERT_EMAILS_ENABLED=false</code>).
       </div>
     );
   }
@@ -57,8 +57,7 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
     return (
       <div className="panel space-y-2 p-5 text-[13px] leading-5 text-text">
         <p>
-          Email is not set up on this server. To send alerts by email, the server owner sets an SMTP server of their
-          own in the environment and restarts the app:
+          O serviço de e-mail não está configurado neste servidor. Para enviar alertas por e-mail, configure um servidor SMTP nas variáveis de ambiente da aplicação:
         </p>
         <p className="flex flex-wrap gap-x-2 gap-y-1">
           {ENV_VARS.map((v) => (
@@ -68,8 +67,8 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
           ))}
         </p>
         <p className="text-muted-foreground">
-          <code className="font-data">SMTP_HOST</code> and <code className="font-data">SMTP_FROM</code> are required.
-          The login stays in the environment: it is never stored or shown here.
+          <code className="font-data">SMTP_HOST</code> e <code className="font-data">SMTP_FROM</code> são obrigatórios.
+          As credenciais ficam seguras no ambiente e nunca são expostas aqui.
         </p>
       </div>
     );
@@ -88,14 +87,14 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setInvalid(data.field === "recipients");
-        setMessage({ ok: false, text: data.error || "That did not work. Try again." });
+        setMessage({ ok: false, text: data.error || "Não foi possível concluir. Tente novamente." });
         return;
       }
       if (kind === "test") {
         setMessage(
           data.ok
-            ? { ok: true, text: "Test email sent. Check the inbox, and the spam folder." }
-            : { ok: false, text: data.error || "The test email was not sent." }
+            ? { ok: true, text: "E-mail de teste enviado. Verifique sua caixa de entrada e pasta de spam." }
+            : { ok: false, text: data.error || "O e-mail de teste não foi enviado." }
         );
         return;
       }
@@ -103,9 +102,9 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
       setStatus(next);
       setRecipients(next.recipients.join(", "));
       setOn(next.on);
-      setMessage({ ok: true, text: next.on ? "Saved. Fired alerts are emailed." : "Saved. Alert emails are off." });
+      setMessage({ ok: true, text: next.on ? "Salvo. Alertas disparados serão enviados por e-mail." : "Salvo. Envio por e-mail desativado." });
     } catch {
-      setMessage({ ok: false, text: "That did not work. Try again." });
+      setMessage({ ok: false, text: "Não foi possível concluir. Tente novamente." });
     } finally {
       setBusy(null);
     }
@@ -128,13 +127,11 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
         </span>
         <div className={`min-w-0 flex-1 space-y-3 ${FORM_MAX_WIDTH}`}>
           <p className="text-[13px] leading-5 text-muted-foreground">
-            When alerts fire, this server emails them through its own SMTP server: plain text and simple HTML, with no
-            tracking and no links except to this app. A failed email is retried a few times and never holds up a
-            crawl or a sync.
+            Quando alertas dispararem, este servidor enviará notificações via SMTP: texto puro e HTML limpo, sem rastreadores e com links exclusivos para esta aplicação.
           </p>
           <div>
             <label htmlFor={`${id}-to`} className="mb-1 block text-xs font-medium text-muted-foreground">
-              Send to
+              Enviar para
             </label>
             <input
               id={`${id}-to`}
@@ -143,7 +140,7 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
               inputMode="email"
               autoComplete="email"
               spellCheck={false}
-              placeholder="you@example.com, team@example.com"
+              placeholder="voce@exemplo.com, equipe@exemplo.com"
               value={recipients}
               aria-invalid={invalid || undefined}
               aria-describedby={`${id}-to-help`}
@@ -154,7 +151,7 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
               className={INPUT_CLASS}
             />
             <p id={`${id}-to-help`} className="mt-1.5 text-xs leading-[18px] text-muted-foreground">
-              Up to 5 addresses, separated by commas.
+              Até 5 endereços de e-mail, separados por vírgula.
             </p>
           </div>
           <label className="flex items-center gap-2 text-[13px] text-text">
@@ -165,7 +162,7 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
               onChange={(e) => setOn(e.target.checked)}
               className="size-4 accent-brand-500"
             />
-            Email fired alerts
+            Enviar alertas disparados por e-mail
           </label>
 
           {message && (
@@ -182,11 +179,11 @@ export function EmailSection({ initial }: { initial: EmailStatus }) {
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Button type="submit" size="sm" disabled={busy !== null}>
               {busy === "save" && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-              Save
+              Salvar
             </Button>
             <Button type="button" size="sm" variant="outline" disabled={busy !== null} onClick={() => void call("test")}>
               {busy === "test" && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
-              Send test
+              Enviar teste
             </Button>
           </div>
         </div>

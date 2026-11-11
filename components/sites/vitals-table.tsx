@@ -14,12 +14,12 @@ import { formatDay } from "@/lib/format";
 
 const HEADERS: MetricHeader[] = [
   { label: "URL", sortKey: "url", defaultDir: "asc" },
-  { label: "Score", align: "right", sortKey: "perfScore", defaultDir: "asc" },
+  { label: "Pontuação", align: "right", sortKey: "perfScore", defaultDir: "asc" },
   { label: "LCP", align: "right", sortKey: "lcp" },
   { label: "CLS", align: "right", sortKey: "cls" },
   { label: "INP", align: "right", sortKey: "inp" },
   { label: "TTFB", align: "right", sortKey: "ttfb" },
-  { label: "When", sortKey: "date" },
+  { label: "Data", sortKey: "date" },
 ];
 
 export interface VitalsRowData {
@@ -49,20 +49,20 @@ export function VitalsTable({ rows }: { rows: VitalsRowData[] }) {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-end gap-3">
-        <SearchField value={search} onChange={setSearch} placeholder="Filter by URL..." />
+        <SearchField value={search} onChange={setSearch} placeholder="Filtrar por URL..." />
       </div>
 
       {filtered.length === 0 ? (
         <div className="panel px-4 py-10 text-center">
-          <p className="font-medium text-text-strong">No reports match</p>
-          <p className="mt-1 text-sm text-muted-foreground">Loosen the search.</p>
+          <p className="font-medium text-text-strong">Nenhum relatório encontrado</p>
+          <p className="mt-1 text-sm text-muted-foreground">Ajuste o termo de busca.</p>
         </div>
       ) : (
         <MetricTable
           sort={sort}
           onSort={toggle}
           headers={HEADERS}
-          footer={`Showing ${filtered.length} of ${rows.length} reports · sorted by ${sortLabel(HEADERS, sort)}`}
+          footer={`Exibindo ${filtered.length} de ${rows.length} relatórios · ordenados por ${sortLabel(HEADERS, sort)}`}
         >
           {filtered.map((r) => (
             <tr key={r.id} className="hover:bg-bg-soft">

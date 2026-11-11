@@ -56,16 +56,16 @@ export default async function SavedKeywordsPage({ params }: Props) {
   return (
     <div>
       <PageHeader
-        title="Saved keywords"
-        description="Track specific keywords over time."
+        title="Palavras salvas"
+        description="Acompanhe termos estratégicos com métricas consolidadas."
         actions={<SaveKeywordForm siteId={siteId} />}
       />
 
       {saved.length === 0 ? (
         <EmptyState
           illustration="empty-saved"
-          title="No saved keywords"
-          description="Save keywords you want to track closely. Use the form above to add your first keyword."
+          title="Nenhuma palavra salva"
+          description="Salve as palavras-chave mais importantes para monitorar de perto. Use o formulário acima para adicionar."
         />
       ) : (
         <SavedKeywordsTable

@@ -88,17 +88,17 @@ export function KeywordResearchClient({
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
           <div className="text-sm">
             <p className="font-medium text-text-strong">
-              Limited data: Google Autocomplete only
+              Dados limitados: apenas sugestões do Google Autocomplete
             </p>
             <p className="mt-0.5 text-muted-foreground">
-              Add a DataForSEO API key in{" "}
+              Adicione uma chave do DataForSEO em{" "}
               <Link
                 href="/settings?connect=dataforseo#connections"
                 className="text-link"
               >
-                Settings
+                Configurações
               </Link>{" "}
-              for search volume, difficulty, and CPC data.
+              para obter métricas de volume de busca, dificuldade e CPC.
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@ export function KeywordResearchClient({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter a seed keyword..."
+            placeholder="Digite um termo inicial..."
             className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-brand-500 focus:bg-bg focus:outline-none"
           />
         </div>
@@ -126,7 +126,7 @@ export function KeywordResearchClient({
           ) : (
             <Search className="size-4" />
           )}
-          Research
+          Pesquisar
         </button>
       </form>
 
@@ -135,8 +135,7 @@ export function KeywordResearchClient({
         <div className="panel overflow-hidden">
           {source === "autocomplete" && (
             <div className="border-b border-border bg-bg-soft px-4 py-2 text-xs text-muted-foreground">
-              Showing Google Autocomplete suggestions: volume and difficulty data
-              requires DataForSEO
+              Exibindo sugestões do Google Autocomplete: métricas de volume e dificuldade requerem DataForSEO
             </div>
           )}
           <div className="overflow-x-auto">
@@ -144,7 +143,7 @@ export function KeywordResearchClient({
               <thead>
                 <tr className="border-b border-border text-left">
                   <th className="px-4 py-3 font-medium text-muted-foreground">
-                    Keyword
+                    Palavra-chave
                   </th>
                   {source === "dataforseo" && (
                     <>
@@ -152,7 +151,7 @@ export function KeywordResearchClient({
                         Volume
                       </th>
                       <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                        Difficulty
+                        Dificuldade
                       </th>
                       <th className="px-4 py-3 text-right font-medium text-muted-foreground">
                         CPC
@@ -160,7 +159,7 @@ export function KeywordResearchClient({
                     </>
                   )}
                   <th className="px-4 py-3 text-right font-medium text-muted-foreground">
-                    Action
+                    Ação
                   </th>
                 </tr>
               </thead>
@@ -202,14 +201,14 @@ export function KeywordResearchClient({
                           {isSaved ? (
                             <>
                               <Check className="size-3 text-success" />
-                              Saved
+                              Salvo
                             </>
                           ) : isSaving ? (
                             <Loader2 className="size-3 animate-spin" />
                           ) : (
                             <>
                               <Bookmark className="size-3" />
-                              Save
+                              Salvar
                             </>
                           )}
                         </button>
@@ -221,7 +220,7 @@ export function KeywordResearchClient({
             </table>
           </div>
           <div className="border-t border-border bg-bg-soft px-4 py-2 text-xs text-muted-foreground">
-            {results.length} keyword{results.length !== 1 ? "s" : ""} found
+            {results.length} {results.length === 1 ? "palavra-chave encontrada" : "palavras-chave encontradas"}
             {source === "dataforseo" ? " via DataForSEO" : " via Google Autocomplete"}
           </div>
         </div>
@@ -231,9 +230,9 @@ export function KeywordResearchClient({
       {!loading && results.length === 0 && source !== null && (
         <div className="panel flex flex-col items-center py-12 text-center">
           <Search className="size-10 text-text-faint" />
-          <p className="mt-3 font-medium text-text-strong">No results found</p>
+          <p className="mt-3 font-medium text-text-strong">Nenhum resultado encontrado</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            Try a different seed keyword
+            Tente buscar por um termo diferente
           </p>
         </div>
       )}

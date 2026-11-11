@@ -52,7 +52,7 @@ export function useTableSort(initial: SortState) {
 /** Human label for the active sort, for footers ("Score", not "perfScore"). */
 export function sortLabel(headers: MetricHeader[], sort: SortState): string {
   const label = headers.find((h) => h.sortKey === sort.key)?.label ?? sort.key;
-  return `${label.toLowerCase()} ${sort.dir === "asc" ? "ascending" : "descending"}`;
+  return `${label.toLowerCase()} em ordem ${sort.dir === "asc" ? "crescente" : "decrescente"}`;
 }
 
 /** Generic comparator: numbers numerically, strings via localeCompare, null/undefined last. */
@@ -111,7 +111,7 @@ export function MetricTable({
                           "mono-label inline-flex items-center gap-1 transition-colors hover:text-text-strong",
                           active && "text-text-strong"
                         )}
-                        title={`Sort by ${h.label}`}
+                        title={`Ordenar por ${h.label}`}
                       >
                         {h.label}
                         {active ? (
@@ -160,13 +160,13 @@ export function SearchField({
   return (
     <label className="flex min-w-56 flex-1 flex-col gap-1">
       <span className="mono-label text-[11px] text-muted-foreground">
-        Search
+        Buscar
       </span>
       <input
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder ?? "Filter..."}
+        placeholder={placeholder ?? "Filtrar..."}
         className={filterInputClass}
       />
     </label>
@@ -176,7 +176,7 @@ export function SearchField({
 export type PositionFilter = "all" | "top3" | "top10" | "11-20" | "20+";
 
 export const POSITION_OPTIONS: { value: PositionFilter; label: string }[] = [
-  { value: "all", label: "All positions" },
+  { value: "all", label: "Todas as posições" },
   { value: "top3", label: "Top 3" },
   { value: "top10", label: "Top 10" },
   { value: "11-20", label: "11–20" },
