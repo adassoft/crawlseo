@@ -1,92 +1,92 @@
 export const REMEDIATION: Record<string, { title: string; howToFix: string }> = {
   BROKEN_LINK: {
-    title: "Broken Link",
+    title: "Link Quebrado",
     howToFix:
-      "Update or remove the broken link. If the target page was moved, replace the URL with the new destination. Set up 301 redirects for any pages you have retired.",
+      "Atualize ou remova o link quebrado. Se a página de destino foi movida, substitua a URL pelo novo destino. Configure redirecionamentos 301 para páginas descontinuadas.",
   },
   MANAGED_INFRA: {
-    title: "Managed Infrastructure Endpoint",
+    title: "Endpoint de Infraestrutura Gerenciada",
     howToFix:
-      "This URL belongs to a CDN or hosting provider (e.g. Cloudflare /cdn-cgi/). It is managed automatically and is expected to return a non-200 status when accessed directly. No action is needed.",
+      "Esta URL pertence a um provedor de hospedagem ou CDN (ex: Cloudflare /cdn-cgi/). É gerenciada automaticamente e pode retornar status diferente de 200 ao ser acessada diretamente. Nenhuma ação é necessária.",
   },
   REDIRECT: {
-    title: "Redirect Detected",
+    title: "Redirecionamento Detectado",
     howToFix:
-      "Update internal links to point directly to the final destination URL instead of the redirecting URL. Eliminate redirect chains by ensuring each redirect resolves in a single hop.",
+      "Atualize os links internos para apontarem diretamente para a URL final em vez da URL que redireciona. Elimine cadeias de redirecionamento garantindo que cada redirecionamento ocorra em um único salto.",
   },
   MISSING_TITLE: {
-    title: "Missing Title Tag",
+    title: "Tag de Título Ausente",
     howToFix:
-      "Add a unique <title> tag between 15 and 65 characters that accurately describes the page content and includes the primary target keyword.",
+      "Adicione uma tag <title> exclusiva entre 15 e 65 caracteres que descreva com precisão o conteúdo da página e inclua a palavra-chave principal.",
   },
   MISSING_DESCRIPTION: {
-    title: "Missing Meta Description",
+    title: "Meta Descrição Ausente",
     howToFix:
-      "Add a <meta name=\"description\"> tag between 50 and 160 characters that summarizes the page and entices users to click from search results.",
+      "Adicione uma tag <meta name=\"description\"> entre 50 e 160 caracteres que resuma a página e atraia cliques nos resultados de busca.",
   },
   DUPLICATE_TITLE: {
-    title: "Duplicate Title Tag",
+    title: "Tag de Título Duplicada",
     howToFix:
-      "Write a unique title for each page. If pages have similar content, consider consolidating them with a canonical tag or merging the content into a single authoritative page.",
+      "Escreva um título exclusivo para cada página. Se as páginas tiverem conteúdo similar, consolide-as com uma tag canonical ou una o conteúdo em uma única página principal.",
   },
   DUPLICATE_DESCRIPTION: {
-    title: "Duplicate Meta Description",
+    title: "Meta Descrição Duplicada",
     howToFix:
-      "Write a unique meta description for each page. Avoid using templates that produce identical descriptions across multiple pages.",
+      "Escreva uma meta descrição exclusiva para cada página. Evite usar modelos automáticos que gerem descrições idênticas em várias páginas.",
   },
   MISSING_H1: {
-    title: "Missing H1 Heading",
+    title: "Cabeçalho H1 Ausente",
     howToFix:
-      "Add a single H1 heading that clearly describes the main topic of the page. Place it above the primary content and include relevant keywords naturally.",
+      "Adicione um único cabeçalho H1 que descreva claramente o tema principal da página. Posicione-o acima do conteúdo principal e inclua palavras-chave relevantes de forma natural.",
   },
   MULTIPLE_H1: {
-    title: "Multiple H1 Headings",
+    title: "Múltiplos Cabeçalhos H1",
     howToFix:
-      "Reduce the page to a single H1 heading. Convert additional H1 tags to H2 or H3 to establish a clear heading hierarchy.",
+      "Mantenha apenas um cabeçalho H1 por página. Converta as tags H1 adicionais em H2 ou H3 para estabelecer uma hierarquia clara de títulos.",
   },
   MISSING_ALT: {
-    title: "Images Missing Alt Text",
+    title: "Imagens sem Texto Alternativo (Alt)",
     howToFix:
-      "Add descriptive alt attributes to all <img> tags. Use concise text that describes the image content. For decorative images, use an empty alt=\"\" attribute.",
+      "Adicione atributos alt descritivos a todas as tags <img>. Use um texto conciso que descreva o conteúdo da imagem. Para imagens decorativas, use alt=\"\".",
   },
   MISSING_CANONICAL: {
-    title: "Missing Canonical Tag",
+    title: "Tag Canonical Ausente",
     howToFix:
-      "Add a <link rel=\"canonical\" href=\"...\"> tag in the <head> pointing to the preferred URL for this page. This prevents duplicate content issues from URL variations.",
+      "Adicione uma tag <link rel=\"canonical\" href=\"...\"> no <head> apontando para a URL preferencial desta página. Isso evita problemas de conteúdo duplicado.",
   },
   MISSING_ROBOTS: {
-    title: "Missing robots.txt",
+    title: "robots.txt Ausente",
     howToFix:
-      "Create a robots.txt file at the site root. At minimum, specify the User-agent and Sitemap directives. Use Disallow rules to block crawlers from admin or duplicate pages.",
+      "Crie um arquivo robots.txt na raiz do site. No mínimo, especifique as diretivas User-agent e Sitemap. Use regras Disallow para bloquear robôs em páginas administrativas ou duplicadas.",
   },
   MISSING_SITEMAP: {
-    title: "Missing or Incomplete Sitemap",
+    title: "Sitemap Ausente ou Incompleto",
     howToFix:
-      "Create an XML sitemap listing all indexable pages and submit it to Google Search Console. Ensure every crawlable page is included in the sitemap.",
+      "Crie um sitemap XML listando todas as páginas indexáveis e envie-o no Google Search Console. Certifique-se de que todas as páginas importantes estejam incluídas.",
   },
   SITEMAP_BLOCKED: {
-    title: "Sitemap Blocked by robots.txt",
+    title: "Sitemap Bloqueado pelo robots.txt",
     howToFix:
-      "Allow the sitemap URL in robots.txt: remove or narrow the Disallow rule that matches it, or the redirect target it leads to. If robots.txt itself cannot be read (429, 5xx, timeout), fix that first. Then resubmit the sitemap in Google Search Console.",
+      "Permita a URL do sitemap no robots.txt: remova ou restrinja a regra Disallow que a bloqueia. Se o próprio robots.txt não puder ser lido (429, 5xx, timeout), corrija isso primeiro e reenvie no Search Console.",
   },
   MISSING_SCHEMA: {
-    title: "No Structured Data",
+    title: "Sem Dados Estruturados",
     howToFix:
-      "Add JSON-LD structured data relevant to the page type (Article, Product, FAQPage, etc.). Validate with Google's Rich Results Test before deploying.",
+      "Adicione dados estruturados JSON-LD relevantes ao tipo de página (Artigo, Produto, FAQPage, etc.). Valide no teste de resultados avançados do Google antes de publicar.",
   },
   SLOW_PAGE: {
-    title: "Slow Page Response",
+    title: "Resposta Lenta da Página",
     howToFix:
-      "Reduce server response time by enabling caching, optimizing database queries, and using a CDN. Aim for a server response time under 200ms and total load under 3 seconds.",
+      "Reduza o tempo de resposta do servidor ativando cache, otimizando consultas ao banco de dados e usando um CDN. Busque tempo de resposta abaixo de 200ms e carregamento total abaixo de 3 segundos.",
   },
   MIXED_CONTENT: {
-    title: "Mixed Content (HTTP on HTTPS)",
+    title: "Conteúdo Misto (HTTP em HTTPS)",
     howToFix:
-      "Update all resource URLs (images, scripts, stylesheets) to use HTTPS. Use protocol-relative URLs or enforce HTTPS via Content-Security-Policy headers.",
+      "Atualize todos os recursos (imagens, scripts, folhas de estilo) para usar HTTPS. Imponha HTTPS por meio de cabeçalhos Content-Security-Policy.",
   },
   LARGE_PAGE: {
-    title: "Large HTML Payload",
+    title: "Página com Tamanho Excessivo",
     howToFix:
-      "Reduce the HTML payload by removing inline CSS/JS, deferring non-critical resources, lazy-loading images, and minifying the HTML output. Aim for under 3 MB per page.",
+      "Reduza o tamanho do HTML removendo CSS/JS inline, adiando recursos não críticos, aplicando lazy-loading em imagens e minificando o HTML. Busque manter abaixo de 3 MB por página.",
   },
 };

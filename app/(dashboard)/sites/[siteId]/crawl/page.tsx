@@ -17,6 +17,7 @@ import { formatDay } from "@/lib/format";
 import { getVisibleIssues } from "@/lib/crawler/issue-filter";
 import { getCrawlActivity } from "@/lib/jobs/site-jobs";
 import { crawledPageColumns, getCrawlPageStats, getCrawlRobotsReport } from "@/lib/crawler/page-stats";
+import { REMEDIATION } from "@/lib/crawler/remediation";
 
 const ISSUE_ROWS = 200;
 
@@ -140,40 +141,41 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                 <p className="px-4 pt-2 pb-6 text-[13px] text-muted-foreground">Nenhum problema encontrado</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[640px] text-[13px]">
+                  <table className="w-full min-w-[720px] text-[13px]">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className={th}>Gravidade</th>
-                        <th className={th}>Problema</th>
-                        <th className={th}>Página</th>
-                        <th className={th}>Tipo</th>
+                        <th className="mono-label w-[110px] px-4 py-2.5 text-left text-[11px] font-normal text-muted-foreground">Gravidade</th>
+                        <th className="mono-label px-4 py-2.5 text-left text-[11px] font-normal text-muted-foreground">Problema</th>
+                        <th className="mono-label w-[42%] min-w-[280px] px-4 py-2.5 text-left text-[11px] font-normal text-muted-foreground">Página</th>
+                        <th className="mono-label w-[150px] px-4 py-2.5 text-left text-[11px] font-normal text-muted-foreground">Tipo</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border-soft">
                       {issues.map((issue) => {
                         const details = issue.details as { howToFix?: string; kind?: string } | null;
+                        const howToFix = getHowToFix(issue.type, details?.howToFix);
                         return (
                           <tr key={issue.id} className="align-top">
                             <td className="px-4 py-3">
                               <SeverityChip severity={issue.severity} />
                             </td>
                             <td className="px-4 py-3">
-                              <p className="text-text-strong">{issue.message}</p>
-                              {details?.howToFix && (
+                              <p className="font-medium text-text-strong">{translateIssueMessage(issue.message)}</p>
+                              {howToFix && (
                                 <p className="mt-1 text-[12px] leading-[18px] text-muted-foreground">
                                   <span className="font-medium text-text">Correção: </span>
-                                  {details.howToFix}
+                                  {howToFix}
                                 </p>
                               )}
                             </td>
                             <td className="px-4 py-3 font-data text-[12px]">
-                              <div className="flex items-start gap-2">
-                                <div className="min-w-0 max-w-xs md:max-w-sm xl:max-w-md">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="min-w-0 flex-1">
                                   <a
                                     href={issue.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="break-all font-medium text-text-strong transition-colors hover:text-link hover:underline"
+                                    className="font-medium text-text-strong transition-colors hover:text-link hover:underline [overflow-wrap:anywhere]"
                                     title={issue.url}
                                   >
                                     {pathOf(issue.url)}
@@ -183,7 +185,7 @@ export default async function CrawlPage({ params, searchParams }: Props) {
                               </div>
                             </td>
                             <td className="px-4 py-3 mono-label text-[11px] whitespace-nowrap text-muted-foreground">
-                              {issue.type.replace(/_/g, " ")}
+                              {translateIssueType(issue.type)}
                               {details?.kind === "orphan" ? " · órfã" : ""}
                             </td>
                           </tr>
@@ -309,4 +311,82 @@ function CountCard({
       <span className="text-[12px] leading-4 text-muted-foreground">{note}</span>
     </div>
   );
+}
+
+const ISSUE_TYPE_LABELS: Record<string, string> = {
+  BROKEN_LINK: "Link Quebrado",
+  MANAGED_INFRA: "Infraestrutura",
+  REDIRECT: "Redirecionamento",
+  MISSING_TITLE: "Sem Título",
+  MISSING_DESCRIPTION: "Sem Descrição",
+  DUPLICATE_TITLE: "Título Duplicado",
+  DUPLICATE_DESCRIPTION: "Descrição Duplicada",
+  MISSING_H1: "Sem H1",
+  MULTIPLE_H1: "Múltiplos H1",
+  MISSING_ALT: "Sem Alt",
+  MISSING_CANONICAL: "Sem Canonical",
+  MISSING_ROBOTS: "Sem robots.txt",
+  MISSING_SITEMAP: "Sem Sitemap",
+  SITEMAP_BLOCKED: "Sitemap Bloqueado",
+  MISSING_SCHEMA: "Sem Schema",
+  SLOW_PAGE: "Página Lenta",
+  MIXED_CONTENT: "Conteúdo Misto",
+  LARGE_PAGE: "Página Pesada",
+};
+
+function translateIssueType(type: string): string {
+  return ISSUE_TYPE_LABELS[type] ?? type.replace(/_/g, " ");
+}
+
+function getHowToFix(type: string, fallback?: string): string | null {
+  const rem = REMEDIATION[type];
+  if (rem?.howToFix) return rem.howToFix;
+  return fallback ?? null;
+}
+
+function translateIssueMessage(message: string): string {
+  if (!message) return "";
+
+  const bytesMatch = message.match(/Response exceeded (\d+) bytes/i);
+  if (bytesMatch) {
+    const mb = (parseInt(bytesMatch[1], 10) / (1024 * 1024)).toFixed(0);
+    return `Tamanho da resposta excedeu limite de ${mb} MB (${bytesMatch[1]} bytes)`;
+  }
+
+  if (message.startsWith("HTTP ")) return `Erro ${message}`;
+
+  if (/Missing <title> tag/i.test(message)) return "Tag <title> ausente";
+  if (/Missing meta description/i.test(message)) return "Meta descrição ausente";
+  if (/No H1 heading found/i.test(message)) return "Nenhum cabeçalho H1 encontrado";
+
+  const h1Match = message.match(/(\d+) H1 headings found/i);
+  if (h1Match) return `${h1Match[1]} cabeçalhos H1 encontrados (esperado apenas 1)`;
+
+  const altMatch = message.match(/(\d+)\/(\d+) images missing alt/i);
+  if (altMatch) return `${altMatch[1]} de ${altMatch[2]} imagens sem texto alt`;
+
+  if (/No canonical tag/i.test(message)) return "Sem tag canonical";
+  if (/No structured data/i.test(message)) return "Sem dados estruturados (Schema / JSON-LD)";
+
+  const slowMatch = message.match(/Slow response:\s*(\d+)ms/i);
+  if (slowMatch) return `Tempo de resposta lento: ${slowMatch[1]}ms`;
+
+  const largeMatch = message.match(/Large HTML payload:\s*([\d.]+)MB/i);
+  if (largeMatch) return `HTML muito pesado: ${largeMatch[1]} MB`;
+
+  if (/Page loads insecure HTTP resources/i.test(message)) return "Página carrega recursos inseguros via HTTP";
+
+  const dupTitleMatch = message.match(/Duplicate title shared by (\d+) pages/i);
+  if (dupTitleMatch) return `Título duplicado compartilhado por ${dupTitleMatch[1]} páginas`;
+
+  const dupDescMatch = message.match(/Duplicate meta description on (\d+) pages/i);
+  if (dupDescMatch) return `Meta descrição duplicada em ${dupDescMatch[1]} páginas`;
+
+  if (/Crawled page not listed in sitemap/i.test(message)) return "Página rastreada não consta no sitemap";
+  if (/Potential orphan page/i.test(message)) return "Página potencialmente órfã (sem links internos recebidos)";
+
+  const infraMatch = message.match(/Managed infra endpoint \(([^)]+)\)/i);
+  if (infraMatch) return `Endpoint de infraestrutura gerenciada (${infraMatch[1]}), esperado`;
+
+  return message;
 }
