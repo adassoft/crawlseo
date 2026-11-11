@@ -337,10 +337,12 @@ const ATTR_RE = /([^\s"'>/=]+)(?:\s*=\s*("[^"]*"|'[^']*'|[^\s>]+))?/g;
 
 /** Strips the surrounding quotes from a raw attribute value, if any. */
 function unquote(raw: string): string {
-  const q = raw[0];
-  return (q === '"' || q === "'") && raw.length > 1 && raw.endsWith(q)
-    ? raw.slice(1, -1)
-    : raw;
+  let val = raw.trim();
+  if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+    val = val.slice(1, -1);
+  }
+  // Strip accidental leading/trailing escaped quotes (\", \') or backslashes
+  return val.replace(/^[\\\"']+|[\\\"']+$/g, "").trim();
 }
 
 /**
@@ -482,8 +484,14 @@ export function parseHtml(
   const externalOutlinks: string[] = [];
   const links: LinkInfo[] = [];
 
+  // Strip script, style and template tags so JSON-LD markup or JS strings are never parsed as HTML links
+  const contentHtml = html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, "")
+    .replace(/<template\b[\s\S]*?<\/template>/gi, "");
+
   const anchorMatches = [
-    ...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi),
+    ...contentHtml.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi),
   ];
   for (const m of anchorMatches) {
     const attrs = m[1];
