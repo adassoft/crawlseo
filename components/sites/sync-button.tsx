@@ -117,7 +117,9 @@ export function SyncButton({
       }
       setOutcome(next);
 
-      if (next.tone === "success" || next.tone === "empty") router.refresh();
+      if (next.tone === "success" || next.tone === "empty") {
+        window.location.reload();
+      }
       // Only a plain success fades; an empty result or an error stays until the next sync.
       if (next.tone === "success") setTimeout(() => setOutcome(null), 4000);
     } catch {

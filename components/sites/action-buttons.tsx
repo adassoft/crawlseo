@@ -237,7 +237,7 @@ export function VitalsButton({ siteId }: { siteId: string }) {
       if (job.status === "FAILED") throw new Error(job.lastError || "Falha no teste de vitals");
       const inserted = (job.result as { inserted?: number } | null)?.inserted ?? 0;
       setStatus({ kind: "ok", text: `Salvos ${inserted} relatórios do PageSpeed` });
-      router.refresh();
+      window.location.reload();
     } catch (e) {
       setStatus({ kind: "error", text: e instanceof Error ? e.message : "Falha" });
     } finally {
