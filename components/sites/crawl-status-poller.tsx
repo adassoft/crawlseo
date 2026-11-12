@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { fetchJob, isFinished, isSettled, pendingNote, type JobView } from "@/lib/jobs/client";
 import { CrawlFailedNotice } from "./crawl-failed-notice";
@@ -11,7 +10,6 @@ import { CrawlFailedNotice } from "./crawl-failed-notice";
  * failed. `status` is what the server saw when it rendered the page.
  */
 export function CrawlStatusPoller({ jobId, status }: { jobId: string; status: "QUEUED" | "RUNNING" }) {
-  const router = useRouter();
   const [job, setJob] = useState<JobView | null>(null);
 
   const poll = useCallback(async () => {
@@ -19,11 +17,13 @@ export function CrawlStatusPoller({ jobId, status }: { jobId: string; status: "Q
       const data = await fetchJob(jobId);
       if (!data) return;
       setJob(data);
-      if (isFinished(data)) router.refresh();
+      if (isFinished(data)) {
+        window.location.reload();
+      }
     } catch {
       // ignore
     }
-  }, [jobId, router]);
+  }, [jobId]);
 
   const done = job ? isFinished(job) : false;
   // Waiting for an attempt nothing will start: stop polling; Run crawl retries now.
