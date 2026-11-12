@@ -1380,11 +1380,16 @@ async function executeCrawl(
         res.xRobotsTag
       );
 
-      // Mixed content check on raw HTML
+      // Mixed content check on raw HTML: only subresources (img, script, link stylesheet/preload/icon, iframe, audio, video, source, embed, object)
+      const hasMixedSubresource =
+        /(?:<(?:script|img|iframe|audio|video|source|embed|object)\b[^>]*(?:src|data)\s*=\s*["']?http:\/\/|<link\b[^>]*\b(?:href\s*=\s*["']?http:\/\/[^>]*rel\s*=\s*["']?(?:stylesheet|preload|prefetch|icon)|rel\s*=\s*["']?(?:stylesheet|preload|prefetch|icon)[^>]*href\s*=\s*["']?http:\/\/))/i.test(
+          res.html
+        );
+
       if (
         isAudited(page) &&
         page.url.startsWith("https://") &&
-        /(?:src|href)\s*=\s*["']?http:\/\//i.test(res.html)
+        hasMixedSubresource
       ) {
         issues.push({
           url: page.url,
